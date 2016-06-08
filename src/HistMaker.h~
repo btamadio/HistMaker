@@ -11,13 +11,12 @@
 #include <TROOT.h>
 #include <TChain.h>
 #include <TFile.h>
-#include <TLorentzVector.h>
 
 // Header file for the classes stored in the TTree if any.
 #include "vector"
 #include "vector"
 #include "vector"
-using namespace std;
+
 class HistMaker {
 public :
    TTree          *fChain;   //!pointer to the analyzed TTree or TChain
@@ -30,9 +29,6 @@ public :
    Long64_t        eventNumber;
    Int_t           lumiBlock;
    UInt_t          coreFlags;
-   Bool_t          TileError;
-   Bool_t          SCTError;
-   Bool_t          LArError;
    Int_t           mcEventNumber;
    Int_t           mcChannelNumber;
    Float_t         mcEventWeight;
@@ -154,9 +150,6 @@ public :
    TBranch        *b_weight_xs;   //!
    TBranch        *b_weight;   //!
    TBranch        *b_weight_pileup;   //!
-   TBranch        *b_TileError;   //!
-   TBranch        *b_SCTError;   //!
-   TBranch        *b_LArError;   //!
    TBranch        *b_NPV;   //!
    TBranch        *b_actualInteractionsPerCrossing;   //!
    TBranch        *b_averageInteractionsPerCrossing;   //!
@@ -261,7 +254,7 @@ public :
    TBranch        *b_fatjet_D2;   //!
    TBranch        *b_fatjet_NTrimSubjets;   //!
 
-   HistMaker(TTree *tree=0, string outFileName="", float denom=1.0);
+   HistMaker(TTree *tree=0);
    virtual ~HistMaker();
    virtual Int_t    Cut(Long64_t entry);
    virtual Int_t    GetEntry(Long64_t entry);
@@ -270,28 +263,12 @@ public :
    virtual void     Loop();
    virtual Bool_t   Notify();
    virtual void     Show(Long64_t entry = -1);
-   void SetupOutput();
-   static bool reorder(const TLorentzVector &, const TLorentzVector &);
- private:
-   string m_outFileName = "";
-   float m_denom = 1.0;
-   float m_lumi = 6.0;
-   bool m_isMC = false;
-   TFile *m_outFile;
-   float m_htCut = 1000.0;
-   float m_jetPtCut = 50.0;
-   float m_fatJetPtCut = 200.0;
-   float m_jetEtaCut = 2.8;
-   float m_fatJetEtaCut = 2.0;
-   float m_leadJetPtCut = 200.0;
-   float m_fatJetMpTCut = 0.8;
-
 };
 
 #endif
 
 #ifdef HistMaker_cxx
-HistMaker::HistMaker(TTree *tree, string outFileName, float denom) : fChain(0) 
+HistMaker::HistMaker(TTree *tree) : fChain(0) 
 {
 // if parameter tree is not specified (or zero), connect the file
 // used to generate this class and read the Tree.
@@ -305,8 +282,6 @@ HistMaker::HistMaker(TTree *tree, string outFileName, float denom) : fChain(0)
 
    }
    Init(tree);
-   m_outFileName = outFileName;
-   m_denom = denom;
 }
 
 HistMaker::~HistMaker()
@@ -447,9 +422,11 @@ void HistMaker::Init(TTree *tree)
    fChain->SetBranchAddress("eventNumber", &eventNumber, &b_eventNumber);
    fChain->SetBranchAddress("lumiBlock", &lumiBlock, &b_lumiBlock);
    fChain->SetBranchAddress("coreFlags", &coreFlags, &b_coreFlags);
-   fChain->SetBranchAddress("TileError", &TileError, &b_TileError);
-   fChain->SetBranchAddress("SCTError", &SCTError, &b_SCTError);
-   fChain->SetBranchAddress("LArError", &LArError, &b_LArError);
+   fChain->SetBranchAddress("mcEventNumber", &mcEventNumber, &b_mcEventNumber);
+   fChain->SetBranchAddress("mcChannelNumber", &mcChannelNumber, &b_mcChannelNumber);
+   fChain->SetBranchAddress("mcEventWeight", &mcEventWeight, &b_mcEventWeight);
+   fChain->SetBranchAddress("weight_xs", &weight_xs, &b_weight_xs);
+   fChain->SetBranchAddress("weight", &weight, &b_weight);
    fChain->SetBranchAddress("weight_pileup", &weight_pileup, &b_weight_pileup);
    fChain->SetBranchAddress("NPV", &NPV, &b_NPV);
    fChain->SetBranchAddress("actualInteractionsPerCrossing", &actualInteractionsPerCrossing, &b_actualInteractionsPerCrossing);
@@ -509,13 +486,31 @@ void HistMaker::Init(TTree *tree)
    fChain->SetBranchAddress("jet_HadronConeExclTruthLabelID", &jet_HadronConeExclTruthLabelID, &b_jet_HadronConeExclTruthLabelID);
    fChain->SetBranchAddress("njets_Fix60", &njets_Fix60, &b_njets_Fix60);
    fChain->SetBranchAddress("jet_isFix60", &jet_isFix60, &b_jet_isFix60);
+   fChain->SetBranchAddress("jet_SFFix60", &jet_SFFix60, &b_jet_SFFix60);
+   fChain->SetBranchAddress("weight_jet_SFFix60", &weight_jet_SFFix60, &b_weight_jet_SFFix60);
    fChain->SetBranchAddress("njets_Fix70", &njets_Fix70, &b_njets_Fix70);
    fChain->SetBranchAddress("jet_isFix70", &jet_isFix70, &b_jet_isFix70);
+   fChain->SetBranchAddress("jet_SFFix70", &jet_SFFix70, &b_jet_SFFix70);
+   fChain->SetBranchAddress("weight_jet_SFFix70", &weight_jet_SFFix70, &b_weight_jet_SFFix70);
    fChain->SetBranchAddress("njets_Fix77", &njets_Fix77, &b_njets_Fix77);
    fChain->SetBranchAddress("jet_isFix77", &jet_isFix77, &b_jet_isFix77);
-
+   fChain->SetBranchAddress("jet_SFFix77", &jet_SFFix77, &b_jet_SFFix77);
+   fChain->SetBranchAddress("weight_jet_SFFix77", &weight_jet_SFFix77, &b_weight_jet_SFFix77);
    fChain->SetBranchAddress("njets_Fix85", &njets_Fix85, &b_njets_Fix85);
    fChain->SetBranchAddress("jet_isFix85", &jet_isFix85, &b_jet_isFix85);
+   fChain->SetBranchAddress("jet_SFFix85", &jet_SFFix85, &b_jet_SFFix85);
+   fChain->SetBranchAddress("weight_jet_SFFix85", &weight_jet_SFFix85, &b_weight_jet_SFFix85);
+   fChain->SetBranchAddress("jet_ConeTruthLabelID", &jet_ConeTruthLabelID, &b_jet_ConeTruthLabelID);
+   fChain->SetBranchAddress("jet_TruthCount", &jet_TruthCount, &b_jet_TruthCount);
+   fChain->SetBranchAddress("jet_TruthLabelDeltaR_B", &jet_TruthLabelDeltaR_B, &b_jet_TruthLabelDeltaR_B);
+   fChain->SetBranchAddress("jet_TruthLabelDeltaR_C", &jet_TruthLabelDeltaR_C, &b_jet_TruthLabelDeltaR_C);
+   fChain->SetBranchAddress("jet_TruthLabelDeltaR_T", &jet_TruthLabelDeltaR_T, &b_jet_TruthLabelDeltaR_T);
+   fChain->SetBranchAddress("jet_PartonTruthLabelID", &jet_PartonTruthLabelID, &b_jet_PartonTruthLabelID);
+   fChain->SetBranchAddress("jet_GhostTruthAssociationFraction", &jet_GhostTruthAssociationFraction, &b_jet_GhostTruthAssociationFraction);
+   fChain->SetBranchAddress("jet_truth_E", &jet_truth_E, &b_jet_truth_E);
+   fChain->SetBranchAddress("jet_truth_pt", &jet_truth_pt, &b_jet_truth_pt);
+   fChain->SetBranchAddress("jet_truth_phi", &jet_truth_phi, &b_jet_truth_phi);
+   fChain->SetBranchAddress("jet_truth_eta", &jet_truth_eta, &b_jet_truth_eta);
    fChain->SetBranchAddress("nfatjets", &nfatjets, &b_nfatjets);
    fChain->SetBranchAddress("fatjet_E", &fatjet_E, &b_fatjet_E);
    fChain->SetBranchAddress("fatjet_m", &fatjet_m, &b_fatjet_m);
@@ -536,37 +531,6 @@ void HistMaker::Init(TTree *tree)
    fChain->SetBranchAddress("fatjet_C2", &fatjet_C2, &b_fatjet_C2);
    fChain->SetBranchAddress("fatjet_D2", &fatjet_D2, &b_fatjet_D2);
    fChain->SetBranchAddress("fatjet_NTrimSubjets", &fatjet_NTrimSubjets, &b_fatjet_NTrimSubjets);
-   
-   if(fChain->GetListOfBranches()->Contains("mcChannelNumber")){
-     m_isMC = true;
-     fChain->SetBranchAddress("jet_SFFix60", &jet_SFFix60, &b_jet_SFFix60);
-     fChain->SetBranchAddress("jet_SFFix70", &jet_SFFix70, &b_jet_SFFix70);
-     fChain->SetBranchAddress("jet_SFFix77", &jet_SFFix77, &b_jet_SFFix77);
-     fChain->SetBranchAddress("jet_SFFix85", &jet_SFFix85, &b_jet_SFFix85);
-
-     fChain->SetBranchAddress("weight_jet_SFFix60", &weight_jet_SFFix60, &b_weight_jet_SFFix60);
-     fChain->SetBranchAddress("weight_jet_SFFix70", &weight_jet_SFFix70, &b_weight_jet_SFFix70);
-     fChain->SetBranchAddress("weight_jet_SFFix77", &weight_jet_SFFix77, &b_weight_jet_SFFix77);
-     fChain->SetBranchAddress("weight_jet_SFFix85", &weight_jet_SFFix85, &b_weight_jet_SFFix85);
-
-     fChain->SetBranchAddress("mcEventNumber", &mcEventNumber, &b_mcEventNumber);
-     fChain->SetBranchAddress("mcChannelNumber", &mcChannelNumber, &b_mcChannelNumber);
-     fChain->SetBranchAddress("mcEventWeight", &mcEventWeight, &b_mcEventWeight);
-     fChain->SetBranchAddress("weight_xs", &weight_xs, &b_weight_xs);
-     fChain->SetBranchAddress("weight", &weight, &b_weight);
-
-     fChain->SetBranchAddress("jet_ConeTruthLabelID", &jet_ConeTruthLabelID, &b_jet_ConeTruthLabelID);
-     fChain->SetBranchAddress("jet_TruthCount", &jet_TruthCount, &b_jet_TruthCount);
-     fChain->SetBranchAddress("jet_TruthLabelDeltaR_B", &jet_TruthLabelDeltaR_B, &b_jet_TruthLabelDeltaR_B);
-     fChain->SetBranchAddress("jet_TruthLabelDeltaR_C", &jet_TruthLabelDeltaR_C, &b_jet_TruthLabelDeltaR_C);
-     fChain->SetBranchAddress("jet_TruthLabelDeltaR_T", &jet_TruthLabelDeltaR_T, &b_jet_TruthLabelDeltaR_T);
-     fChain->SetBranchAddress("jet_PartonTruthLabelID", &jet_PartonTruthLabelID, &b_jet_PartonTruthLabelID);
-     fChain->SetBranchAddress("jet_GhostTruthAssociationFraction", &jet_GhostTruthAssociationFraction, &b_jet_GhostTruthAssociationFraction);
-     fChain->SetBranchAddress("jet_truth_E", &jet_truth_E, &b_jet_truth_E);
-     fChain->SetBranchAddress("jet_truth_pt", &jet_truth_pt, &b_jet_truth_pt);
-     fChain->SetBranchAddress("jet_truth_phi", &jet_truth_phi, &b_jet_truth_phi);
-     fChain->SetBranchAddress("jet_truth_eta", &jet_truth_eta, &b_jet_truth_eta);
-   }
    Notify();
 }
 
