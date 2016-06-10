@@ -14,18 +14,20 @@ client = pyAMI.client.Client('atlas')
 AtlasAPI.init()
 
 for key in f.GetListOfKeys():
-    runList.append(key.GetName().split('_')[2])
+    if 'h_cutflow' in key.GetName():
+        runList.append(key.GetName().split('_')[2])
 
 runList.sort()
 with open(args.output,'wb') as csvfile:
     cwriter = csv.writer(csvfile,delimiter=',')
     cwriter.writerow(['run',
                       'luminosity',
+                      'CBC selected',
                       'Initial',
                       'GRL',
                       'event cleaning',
                       'trigger',
-                      'AkT4 presel',
+                      'pT_lead',
                       'n_fatjet==3',
                       'n_fatjet==3 && b-tag',
                       'n_fatjet==4 && MJ < 600',
@@ -38,10 +40,8 @@ with open(args.output,'wb') as csvfile:
         row = [h.GetBinContent(i) for i in range(1,h.GetNbinsX()+1)]
         row.insert(0,'')
         row.insert(0,int(run))
-#        dsName = 'data15_13TeV.00'+run+'.physics_Main.merge.DAOD_EXOT3.r7562_p2521_p2614'
-#        d=AtlasAPI.get_dataset_info(client,dsName)[0]
-#        totalEvents = int(d['totalEvents'])
-#        if row[2] != totalEvents:
-#            print 'DSID: %s, AMI = %i, CBC = %i, difference = %i' % (run,totalEvents,row[2],totalEvents-row[2])
-#        row[2] = totalEvents
+        dsName = 'data15_13TeV.00'+run+'.physics_Main.merge.DAOD_EXOT3.r7562_p2521_p2614'
+        d=AtlasAPI.get_dataset_info(client,dsName)[0]
+        totalEvents = int(d['totalEvents'])
+        print 'DSID: %s, AMI = %i, CBC = %i, Initial = %i' % (run,totalEvents,row[2],row[3])
         cwriter.writerow(row)

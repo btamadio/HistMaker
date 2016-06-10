@@ -9,7 +9,7 @@ class TemplateMaker;
 int main(int argc, char *argv[]){
   if (argc < 4){
     cout<<"Not enough command line arguments."<<endl;
-    cout<<"usage: RunHists <infile> <outfile> <denom or initial events>"<<endl;
+    cout<<"usage: RunHists <infile> <outfile> <denom>"<<endl;
     return 0;
   }
   string inFileName = argv[1];

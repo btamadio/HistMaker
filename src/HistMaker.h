@@ -12,7 +12,7 @@
 #include <TChain.h>
 #include <TFile.h>
 #include <TLorentzVector.h>
-
+#include <fstream>
 // Header file for the classes stored in the TTree if any.
 #include "vector"
 #include "vector"
@@ -272,6 +272,8 @@ public :
    virtual void     Show(Long64_t entry = -1);
    void SetupOutput();
    static bool reorder(const TLorentzVector &, const TLorentzVector &);
+   bool passGRL(int,int);
+   int readGRL();
  private:
    string m_outFileName = "";
    float m_denom = 1.0;
@@ -283,9 +285,11 @@ public :
    float m_fatJetPtCut = 200.0;
    float m_jetEtaCut = 2.8;
    float m_fatJetEtaCut = 2.0;
-   float m_leadJetPtCut = 200.0;
+   float m_leadJetPtCut = 440.0;
    float m_fatJetMpTCut = 0.8;
-
+   string m_GRLFileName = "/project/projectdirs/atlas/btamadio/RPV_SUSY/MAF/xAODAnaHelpers/data/data15_13TeV.periodAllYear_DetStatus-v75-repro20-01_DQDefects-00-02-02_PHYS_StandardGRL_All_Good_25ns.xml";
+   //this data structure holds the GRL information
+   map<int,vector<pair<int,int> > >  m_GRL;
 };
 
 #endif
