@@ -26,7 +26,7 @@ void HistMaker::Loop(){
      suffix="_"+to_string(mcChannelNumber);
    }
    Long64_t nentries = fChain->GetEntriesFast();
-   TH1F *h_cutflow = new TH1F(("h_cutflow"+suffix).c_str(),"cutflow histogram",12,0.5,12.5);
+   TH1F *h_cutflow = new TH1F(("h_cutflow"+suffix).c_str(),"cutflow histogram",10,0.5,10.5);
    //For data: 2= every event looped over, 3= events that pass GRL
    //For MC: 1 = 2 = xsec*luminosity, 3= all events looped over
    h_cutflow->GetXaxis()->SetBinLabel(1,"CBC Selected");
@@ -35,12 +35,10 @@ void HistMaker::Loop(){
    h_cutflow->GetXaxis()->SetBinLabel(4,"event cleaning");
    h_cutflow->GetXaxis()->SetBinLabel(5,"trigger");
    h_cutflow->GetXaxis()->SetBinLabel(6,"p_T^{lead} > 440 GeV");
-   h_cutflow->GetXaxis()->SetBinLabel(7,"n_{fatjet} == 3");
-   h_cutflow->GetXaxis()->SetBinLabel(8,"n_{fatjet} == 3 && b-tag");
-   h_cutflow->GetXaxis()->SetBinLabel(9,"n_{fatjet} == 4 && MJ < 600");
-   h_cutflow->GetXaxis()->SetBinLabel(10,"n_{fatjet} == 4 && MJ < 600 && b-tag");
-   h_cutflow->GetXaxis()->SetBinLabel(11,"n_{fatjet} #geq 5 && MJ < 600");
-   h_cutflow->GetXaxis()->SetBinLabel(12,"n_{fatjet} #geq 5 && MJ < 600 && b-tag");
+   h_cutflow->GetXaxis()->SetBinLabel(7,"n_{fatjet} #geq 5");
+   h_cutflow->GetXaxis()->SetBinLabel(8,"b-tag");
+   h_cutflow->GetXaxis()->SetBinLabel(9,"|#Delta #eta| < 0.7");
+   h_cutflow->GetXaxis()->SetBinLabel(10,"MJ > 800 GeV");
 
    TH1F *h_eventCat = new TH1F(("h_eventcat"+suffix).c_str(),"event categories",18,0.5,18.5);
    h_eventCat->GetXaxis()->SetBinLabel(1,"= 3 jet, b-veto, total");
@@ -112,16 +110,30 @@ void HistMaker::Loop(){
    h_sigYield_dy->GetXaxis()->SetBinLabel(19,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
    h_sigYield_dy->GetXaxis()->SetBinLabel(20,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
 
-   TH1F* h_MJ3 = new TH1F(("h_MJ3"+suffix).c_str(),"M_{J}^{#Sigma}, n_{fatjet} #geq 3",150,0,1500);
-   TH1F* h_MJ4 = new TH1F(("h_MJ4"+suffix).c_str(),"M_{J}^{#Sigma}, n_{fatjet} #geq 4",150,0,1500);
-   TH1F* h_MJ = new TH1F(("h_MJ"+suffix).c_str(),"M_{J}^{#Sigma}",150,0,1500);
-   TH1F* h_MJ_dy7 = new TH1F(("h_MJ_dy7"+suffix).c_str(),"M_{J}^{#Sigma}, |#Delta #eta| < 0.7, n_{fatjet} #geq 5",150,0,1500);
-   TH1F* h_MJ4_dy7 = new TH1F(("h_MJ4_dy7"+suffix).c_str(),"M_{J}^{#Sigma}, |#Delta #eta| < 0.7, n_{fatjet} #geq 4",150,0,1500);
+   TH1F *h_VRyield = new TH1F(("h_VRyield"+suffix).c_str(),"VR yields",12,0.5,12.5);
+   h_VRyield->GetXaxis()->SetBinLabel(1,"3 jet, b-veto, |#Delta #eta| < 0.7");
+   h_VRyield->GetXaxis()->SetBinLabel(2,"3 jet, b-veto, |#Delta #eta| > 0.7");
+   h_VRyield->GetXaxis()->SetBinLabel(3,"3 jet, b-tag, |#Delta #eta| < 0.7");
+   h_VRyield->GetXaxis()->SetBinLabel(4,"3 jet, b-tag, |#Delta #eta| > 0.7");
+   h_VRyield->GetXaxis()->SetBinLabel(5,"4 jet, b-veto,  |#Delta #eta| < 0.7");
+   h_VRyield->GetXaxis()->SetBinLabel(6,"4 jet, b-veto, |#Delta #eta| > 0.7");
+   h_VRyield->GetXaxis()->SetBinLabel(7,"4 jet, b-tag  |#Delta #eta| < 0.7");
+   h_VRyield->GetXaxis()->SetBinLabel(8,"4 jet, b-tag, |#Delta #eta| > 0.7");
+   h_VRyield->GetXaxis()->SetBinLabel(9,"5 jet, b-veto, |#Delta #eta| < 0.7");
+   h_VRyield->GetXaxis()->SetBinLabel(10,"5 jet, b-veto, |#Delta #eta| > 0.7");
+   h_VRyield->GetXaxis()->SetBinLabel(11,"5 jet, b-tag, |#Delta #eta| < 0.7");
+   h_VRyield->GetXaxis()->SetBinLabel(12,"5 jet, b-tag, |#Delta #eta| > 0.7");
+
+   TH1F* h_MJ3 = new TH1F(("h_MJ3"+suffix).c_str(),"M_{J}^{#Sigma}, n_{fatjet} == 3, b-tag",150,0,1500);
+   TH1F* h_MJ4 = new TH1F(("h_MJ4"+suffix).c_str(),"M_{J}^{#Sigma}, n_{fatjet} == 4, b-tag",150,0,1500);
+   TH1F* h_MJ5 = new TH1F(("h_MJ5"+suffix).c_str(),"M_{J}^{#Sigma}, n_{fatjet} #geq 5, b-tag",150,0,1500);
+   TH1F* h_MJ4_dy7 = new TH1F(("h_MJ4_dy7"+suffix).c_str(),"M_{J}^{#Sigma}, |#Delta #eta| < 0.7, n_{fatjet} == 4, b-tag",150,0,1500);
+   TH1F* h_MJ5_dy7 = new TH1F(("h_MJ5_dy7"+suffix).c_str(),"M_{J}^{#Sigma}, |#Delta #eta| < 0.7, n_{fatjet} #geq 5, b-tag",150,0,1500);
      
    TH1F* h_dy_presel = new TH1F(("h_dy_presel"+suffix).c_str(),"#Delta #eta",100,0,5);
-   TH1F* h_dy_n3 = new TH1F(("h_dy_n3"+suffix).c_str(),"#Delta #eta, n_{fatjet} #geq 3",100,0,5);
-   TH1F* h_dy_n4 = new TH1F(("h_dy_n4"+suffix).c_str(),"#Delta #eta, n_{fatjet} #geq 4",100,0,5);
-   TH1F* h_dy_n5 = new TH1F(("h_dy_n5"+suffix).c_str(),"#Delta #eta, n_{fatjet} #geq 5",100,0,5);
+   TH1F* h_dy_n3 = new TH1F(("h_dy_n3"+suffix).c_str(),"#Delta #eta, n_{fatjet} == 3, b-tag",100,0,5);
+   TH1F* h_dy_n4 = new TH1F(("h_dy_n4"+suffix).c_str(),"#Delta #eta, n_{fatjet} == 4, b-tag",100,0,5);
+   TH1F* h_dy_n5 = new TH1F(("h_dy_n5"+suffix).c_str(),"#Delta #eta, n_{fatjet} #geq 5, b-tag",100,0,5);
 
    if (m_isMC){
      fChain->GetEntry(0);
@@ -156,7 +168,7 @@ void HistMaker::Loop(){
       }
       //GRL cut
       else{
-	//all event seen
+	//for data, fill second bin for all events seen
 	h_cutflow->Fill(2,1);
 	if( !passGRL( runNumber, lumiBlock ) ){ continue; }
       }
@@ -204,19 +216,52 @@ void HistMaker::Loop(){
       int nJetLoop = 4;
       if (fj4mom.size() < 4){ nJetLoop = fj4mom.size(); }
       for( int i = 0; i < nJetLoop; i++){ mj += fj4mom.at(i).M(); }
-      iCut++;
-      if(nFatJet == 3){ h_cutflow->Fill(iCut,w); }
-      iCut++;
-      if(nFatJet == 3 && nBTag >= 1){ h_cutflow->Fill(iCut,bw); }
-      iCut++;
-      if(nFatJet == 4 && mj < 600){ h_cutflow->Fill(iCut,w); }
-      iCut++;
-      if(nFatJet == 4 && nBTag >= 1 && mj < 600){ h_cutflow->Fill(iCut,bw); }
-      iCut++;
-      if(nFatJet >= 5 && mj < 600){ h_cutflow->Fill(iCut,w); }
-      iCut++;
-      if(nFatJet >= 5 && mj < 600 && nBTag >= 1){ h_cutflow->Fill(iCut,bw); }
 
+      if(nFatJet >= 5){ 
+	h_cutflow->Fill(++iCut,w); 
+	if(nBTag >= 1){
+	  h_cutflow->Fill(++iCut,bw);
+	  if(dy < 0.7){
+	    h_cutflow->Fill(++iCut,bw);
+	    if(mj > 800){
+	      h_cutflow->Fill(++iCut,bw);
+	    }
+	  }
+	}
+      }
+      if (500 < mj < 650){
+	if( nFatJet == 3){
+	  if( nBTag == 0){
+	    if( dy < 0.7 ){ h_VRyield->Fill(1,bw); }
+	    else{ h_VRyield->Fill(2,bw); }
+	  }
+	  else{
+	    if( dy < 0.7 ){ h_VRyield->Fill(3,bw); }
+	    else{ h_VRyield->Fill(4,bw); }
+	  }
+	}
+	if( nFatJet == 4){
+	  if( nBTag == 0){
+	    if( dy < 0.7 ){ h_VRyield->Fill(5,bw); }
+	    else{ h_VRyield->Fill(6,bw); }
+	  }
+	  else{
+	    if( dy < 0.7 ){ h_VRyield->Fill(7,bw); }
+	    else{ h_VRyield->Fill(8,bw); }
+	  }
+	}	
+	if( nFatJet == 5){
+	  if( nBTag == 0){
+	    if( dy < 0.7 ){ h_VRyield->Fill(9,bw); }
+	    else{ h_VRyield->Fill(10,bw); }
+	  }
+	  else{
+	    if( dy < 0.7 ){ h_VRyield->Fill(11,bw); }
+	    else{ h_VRyield->Fill(12,bw); }
+	  }
+	}
+
+      }
       if (nFatJet == 3){
         if (nBTag == 0){ h_eventCat->Fill(1,bw); }
         else{ h_eventCat->Fill(2,bw);}
@@ -296,15 +341,22 @@ void HistMaker::Loop(){
 	  }
       }
 
-      if (nFatJet >= 3 and nBTag >= 1){
+      if (nFatJet == 3 and nBTag >= 1){
         h_MJ3->Fill(mj,bw);
 	h_dy_n3->Fill(dy,bw);
       }
-      if(nFatJet >= 4 and nBTag >= 1){
+      if(nFatJet == 4 and nBTag >= 1){
 	h_MJ4->Fill(mj,bw);
 	h_dy_n4->Fill(dy,bw);
 	if(dy < 0.7){
 	  h_MJ4_dy7->Fill(mj,bw);
+	}
+      }
+      if(nFatJet >= 5 and nBTag >= 1){
+	h_MJ5->Fill(mj,bw);
+	h_dy_n5->Fill(dy,bw);
+	if(dy < 0.7){
+	  h_MJ5_dy7->Fill(mj,bw);
 	}
       }
    }
