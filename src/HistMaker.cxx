@@ -10,7 +10,6 @@
 #include <algorithm>
 void HistMaker::SetupOutput(){
   m_outFile = TFile::Open(m_outFileName.c_str(),"RECREATE");
-  cout<<"Opened output file "<<m_outFileName<<endl;
 }
 void HistMaker::Loop(){
    if (fChain == 0) return;
@@ -37,7 +36,7 @@ void HistMaker::Loop(){
    h_cutflow->GetXaxis()->SetBinLabel(6,"p_T^{lead} > 440 GeV");
    h_cutflow->GetXaxis()->SetBinLabel(7,"n_{fatjet} #geq 5");
    h_cutflow->GetXaxis()->SetBinLabel(8,"b-tag");
-   h_cutflow->GetXaxis()->SetBinLabel(9,"|#Delta #eta| < 0.7");
+   h_cutflow->GetXaxis()->SetBinLabel(9,"|#Delta #eta| < 1.4");
    h_cutflow->GetXaxis()->SetBinLabel(10,"MJ > 800 GeV");
 
    TH1F *h_eventCat = new TH1F(("h_eventcat"+suffix).c_str(),"event categories",18,0.5,18.5);
@@ -61,17 +60,17 @@ void HistMaker::Loop(){
    h_eventCat->GetXaxis()->SetBinLabel(18,"#geq 5 jet, b-inc, 200 < MJ < 600");
 
    TH1F* h_sigYield = new TH1F(("h_sigyield"+suffix).c_str(),"signal yield",20,0.5,20.5);
-   h_sigYield->GetXaxis()->SetBinLabel(1,"n_{fatjet} = 4, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(2,"n_{fatjet} = 4, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(3,"n_{fatjet} = 4, b-tag, M_{J}^{#Sigma} > 0.7 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(4,"n_{fatjet} = 4, b-tag, M_{J}^{#Sigma} > 0.75 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(5,"n_{fatjet} = 4, b-tag, M_{J}^{#Sigma} > 0.8 TeV");
+   h_sigYield->GetXaxis()->SetBinLabel(1,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
+   h_sigYield->GetXaxis()->SetBinLabel(2,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
+   h_sigYield->GetXaxis()->SetBinLabel(3,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.7 TeV");
+   h_sigYield->GetXaxis()->SetBinLabel(4,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.75 TeV");
+   h_sigYield->GetXaxis()->SetBinLabel(5,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.8 TeV");
 
-   h_sigYield->GetXaxis()->SetBinLabel(6,"n_{fatjet} = 4, b-inc, M_{J}^{#Sigma} > 0.6 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(7,"n_{fatjet} = 4, b-inc, M_{J}^{#Sigma} > 0.65 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(8,"n_{fatjet} = 4, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(9,"n_{fatjet} = 4, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(10,"n_{fatjet} = 4, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
+   h_sigYield->GetXaxis()->SetBinLabel(6,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.6 TeV");
+   h_sigYield->GetXaxis()->SetBinLabel(7,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.65 TeV");
+   h_sigYield->GetXaxis()->SetBinLabel(8,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
+   h_sigYield->GetXaxis()->SetBinLabel(9,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
+   h_sigYield->GetXaxis()->SetBinLabel(10,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
 
    h_sigYield->GetXaxis()->SetBinLabel(11,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
    h_sigYield->GetXaxis()->SetBinLabel(12,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
@@ -85,18 +84,19 @@ void HistMaker::Loop(){
    h_sigYield->GetXaxis()->SetBinLabel(19,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
    h_sigYield->GetXaxis()->SetBinLabel(20,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
 
-   TH1F* h_sigYield_dy = new TH1F(("h_sigyield_dy"+suffix).c_str(),"signal yield, with |#Delta #eta| < 0.7",20,0.5,20.5);
-   h_sigYield_dy->GetXaxis()->SetBinLabel(1,"n_{fatjet} = 4, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(2,"n_{fatjet} = 4, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(3,"n_{fatjet} = 4, b-tag, M_{J}^{#Sigma} > 0.7 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(4,"n_{fatjet} = 4, b-tag, M_{J}^{#Sigma} > 0.75 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(5,"n_{fatjet} = 4, b-tag, M_{J}^{#Sigma} > 0.8 TeV");
 
-   h_sigYield_dy->GetXaxis()->SetBinLabel(6,"n_{fatjet} = 4, b-inc, M_{J}^{#Sigma} > 0.6 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(7,"n_{fatjet} = 4, b-inc, M_{J}^{#Sigma} > 0.65 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(8,"n_{fatjet} = 4, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(9,"n_{fatjet} = 4, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(10,"n_{fatjet} = 4, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
+   TH1F* h_sigYield_dy = new TH1F(("h_sigyield_dy"+suffix).c_str(),"signal yield, with |#Delta #eta| < 1.4",20,0.5,20.5);
+   h_sigYield_dy->GetXaxis()->SetBinLabel(1,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
+   h_sigYield_dy->GetXaxis()->SetBinLabel(2,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
+   h_sigYield_dy->GetXaxis()->SetBinLabel(3,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.7 TeV");
+   h_sigYield_dy->GetXaxis()->SetBinLabel(4,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.75 TeV");
+   h_sigYield_dy->GetXaxis()->SetBinLabel(5,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.8 TeV");
+
+   h_sigYield_dy->GetXaxis()->SetBinLabel(6,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.6 TeV");
+   h_sigYield_dy->GetXaxis()->SetBinLabel(7,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.65 TeV");
+   h_sigYield_dy->GetXaxis()->SetBinLabel(8,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
+   h_sigYield_dy->GetXaxis()->SetBinLabel(9,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
+   h_sigYield_dy->GetXaxis()->SetBinLabel(10,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
 
    h_sigYield_dy->GetXaxis()->SetBinLabel(11,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
    h_sigYield_dy->GetXaxis()->SetBinLabel(12,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
@@ -123,22 +123,51 @@ void HistMaker::Loop(){
    h_VRyield->GetXaxis()->SetBinLabel(10,"5 jet, b-veto, |#Delta #eta| > 0.7");
    h_VRyield->GetXaxis()->SetBinLabel(11,"5 jet, b-tag, |#Delta #eta| < 0.7");
    h_VRyield->GetXaxis()->SetBinLabel(12,"5 jet, b-tag, |#Delta #eta| > 0.7");
+   
+   vector<TH1F*> h_MJ_m5_bUncert;
+   vector<TH1F*> h_MJ_m4_bUncert;
+   for ( int i = 0; i < 51; i++){
+     h_MJ_m5_bUncert.push_back( new TH1F(("h_MJ_m5_bUncert"+to_string(i)+"_"+suffix).c_str(),"MJ",150,0,1500));
+     h_MJ_m4_bUncert.push_back(new TH1F(("h_MJ_m4_bUncert"+to_string(i)+"_"+suffix).c_str(),"MJ",150,0,1500));
+   }
 
    TH1F* h_MJ3 = new TH1F(("h_MJ3"+suffix).c_str(),"M_{J}^{#Sigma}, n_{fatjet} == 3, b-tag",150,0,1500);
-   TH1F* h_MJ4 = new TH1F(("h_MJ4"+suffix).c_str(),"M_{J}^{#Sigma}, n_{fatjet} == 4, b-tag",150,0,1500);
-   TH1F* h_MJ5 = new TH1F(("h_MJ5"+suffix).c_str(),"M_{J}^{#Sigma}, n_{fatjet} #geq 5, b-tag",150,0,1500);
-   TH1F* h_MJ4_dy7 = new TH1F(("h_MJ4_dy7"+suffix).c_str(),"M_{J}^{#Sigma}, |#Delta #eta| < 0.7, n_{fatjet} == 4, b-tag",150,0,1500);
-   TH1F* h_MJ5_dy7 = new TH1F(("h_MJ5_dy7"+suffix).c_str(),"M_{J}^{#Sigma}, |#Delta #eta| < 0.7, n_{fatjet} #geq 5, b-tag",150,0,1500);
+   TH1F* h_MJ4 = new TH1F(("h_MJ4"+suffix).c_str(),"M_{J}^{#Sigma}, n_{fatjet} >= 4, b-tag",150,0,1500);
+   TH1F* h_MJ4_dy14 = new TH1F(("h_MJ4_dy14"+suffix).c_str(),"M_{J}^{#Sigma}, |#Delta #eta| < 1.4, n_{fatjet} >= 4, b-tag",150,0,1500);
+
+   TH1F* h_MJ5_b1 = new TH1F(("h_MJ_m5_b1"+suffix).c_str(),"M_{J}^{#Sigma}, n_{fatjet} #geq 5, b-tag",150,0,1500);
+   TH1F* h_MJ5_b9 = new TH1F(("h_MJ_m5_b9"+suffix).c_str(),"M_{J}^{#Sigma}, n_{fatjet} #geq 5, b-inc",150,0,1500);
+   TH1F* h_MJ5_b1_dy14 = new TH1F(("h_MJ_m5_b1_dy14"+suffix).c_str(),"M_{J}^{#Sigma}, |#Delta #eta| < 1.4, n_{fatjet} #geq 5, b-tag",150,0,1500);
+   TH1F* h_MJ5_b9_dy14 = new TH1F(("h_MJ_m5_b9_dy14"+suffix).c_str(),"M_{J}^{#Sigma}, |#Delta #eta| < 1.4, n_{fatjet} #geq 5, b-inc",150,0,1500);
      
    TH1F* h_dy_presel = new TH1F(("h_dy_presel"+suffix).c_str(),"#Delta #eta",100,0,5);
    TH1F* h_dy_n3 = new TH1F(("h_dy_n3"+suffix).c_str(),"#Delta #eta, n_{fatjet} == 3, b-tag",100,0,5);
    TH1F* h_dy_n4 = new TH1F(("h_dy_n4"+suffix).c_str(),"#Delta #eta, n_{fatjet} == 4, b-tag",100,0,5);
    TH1F* h_dy_n5 = new TH1F(("h_dy_n5"+suffix).c_str(),"#Delta #eta, n_{fatjet} #geq 5, b-tag",100,0,5);
 
+   TH1F* h_nTruB = new TH1F(("h_nTruB"+suffix).c_str(),"number of truth b-jets",5,-0.5,5.5);
+   TH1F* h_bPt = new TH1F(("h_bPt"+suffix).c_str(),"pT of truth-tagged b-jets",200,0,2000);
+   TH1F* h_bPt_tagged = new TH1F(("h_bPt_tagged"+suffix).c_str(),"pT of reco-tagged b-jets",200,0,2000);
+   
+   TH1F* h_fatjet_pt = new TH1F(("h_fatjet_pt"+suffix).c_str(),"fat jet pT [GeV]",200,0,2000);
+   TH1F* h_fatjet_m = new TH1F(("h_fatjet_m"+suffix).c_str(),"fat jet mass [GeV]",200,0,2000);
+   TH1F* h_fatjet_eta = new TH1F(("h_fatjet_eta"+suffix).c_str(),"fat jet eta",50,-2.2,2.2);   
+   TH1F* h_fatjet_phi = new TH1F(("h_fatjet_phi"+suffix).c_str(),"fat jet phi",50,-3.5,3.5);
+   TH1F* h_fatjet_nTrimSubjets = new TH1F(("h_fatjet_nTrimSubjets"+suffix).c_str(),"fat jet nTrimSubjets",6,-0.5,6.5);
+   TH1F* h_fatjet_split12 = new TH1F(("h_fatjet_Split12"+suffix).c_str(),"fat jet Split12",80,0,800);
+   TH1F* h_fatjet_split23 = new TH1F(("h_fatjet_Split23"+suffix).c_str(),"fat jet Split23",80,0,800);   
+   TH1F* h_fatjet_split34 = new TH1F(("h_fatjet_Split34"+suffix).c_str(),"fat jet Split34",80,0,800);
+   TH1F* h_fatjet_tau32_wta = new TH1F(("h_fatjet_tau32_wta"+suffix).c_str(),"fat jet tau32 wta",100,0,1);
+   TH1F* h_fatjet_tau21_wta = new TH1F(("h_fatjet_tau21_wta"+suffix).c_str(),"fat jet tau21 wta",100,0,1);
+   TH1F* h_fatjet_D2 = new TH1F(("h_fatjet_D2"+suffix).c_str(),"fat jet D2",20,0,200);
+   TH1F* h_fatjet_C2 = new TH1F(("h_fatjet_C2"+suffix).c_str(),"fat jet C2",20,0,0.6);
+
    if (m_isMC){
      fChain->GetEntry(0);
      h_cutflow->SetBinContent(1,1E6*m_lumi*weight);
      h_cutflow->SetBinContent(2,1E6*m_lumi*weight);
+     cout<<"mcChannelNumber = "<<mcChannelNumber<<"\t #sigmaL = "<<weight*1E6*m_lumi<<endl;
+     cout<<"denom = "<<m_denom<<endl;
      h_cutflow->GetXaxis()->SetBinLabel(1,"#sigma L");
      h_cutflow->GetXaxis()->SetBinLabel(2,"#sigma L");
      h_cutflow->GetXaxis()->SetBinLabel(3,"derivation");
@@ -200,17 +229,41 @@ void HistMaker::Loop(){
 	  if( fatjet_pt->at(i) > m_leadJetPtCut ) { passLeadJet = true; }
 	}
       }
-      
+      for( int i = 0; i < fatjet_pt->size(); i++){
+	if(fatjet_pt->at(i) > m_fatJetPtCut && fabs(fatjet_eta->at(i)) < m_fatJetEtaCut && fatjet_m->at(i)/fatjet_pt->at(i) < m_fatJetMpTCut){
+	  h_fatjet_pt->Fill(fatjet_pt->at(i),w);
+	  h_fatjet_m->Fill(fatjet_m->at(i),w);
+	  h_fatjet_eta->Fill(fatjet_eta->at(i),w);
+	  h_fatjet_phi->Fill(fatjet_phi->at(i),w);
+	  h_fatjet_nTrimSubjets->Fill(fatjet_NTrimSubjets->at(i),w);
+	  h_fatjet_split12->Fill(fatjet_Split12->at(i),w);
+	  h_fatjet_split23->Fill(fatjet_Split23->at(i),w);
+	  h_fatjet_split34->Fill(fatjet_Split34->at(i),w);
+	  h_fatjet_tau32_wta->Fill(fatjet_tau32_wta->at(i),w);
+	  h_fatjet_tau21_wta->Fill(fatjet_tau21_wta->at(i),w);
+	  h_fatjet_D2->Fill(fatjet_D2->at(i),w);
+	  h_fatjet_C2->Fill(fatjet_C2->at(i),w);
+	}
+      }
+      //end of preselection
       if ( !passLeadJet ) { continue; }
       h_cutflow->Fill(++iCut,w);
-      
+      int nTruB = 0;
       //count the b-jets
       for( int i = 0; i < jet_pt->size(); i++){
        	if ( jet_pt->at(i) > m_jetPtCut && fabs(jet_eta->at(i)) < m_jetEtaCut && jet_clean_passLooseBad->at(i) == 1){
-       	  if (jet_isFix70->at(i) == 1){ nBTag ++; }
+	  //histograms of truth b-jets, to get b-tagging efficiency
+	  if(abs(jet_PartonTruthLabelID->at(i)) == 5) { 
+	    nTruB++;
+	    h_bPt->Fill(jet_pt->at(i),w); 
+	    if(jet_isFix70->at(i)){ h_bPt_tagged->Fill(jet_pt->at(i),bw); }
+	  }
+       	  if (jet_isFix70->at(i) == 1){ 
+	    nBTag ++; 
+	  }
        	}
       }
-
+      h_nTruB->Fill(nTruB,bw);
       sort(fj4mom.begin(), fj4mom.end(), reorder);
       if ( fj4mom.size() >= 2 ) { dy = fabs(fj4mom.at(0).Eta() - fj4mom.at(1).Eta()); }
       int nJetLoop = 4;
@@ -221,7 +274,7 @@ void HistMaker::Loop(){
 	h_cutflow->Fill(++iCut,w); 
 	if(nBTag >= 1){
 	  h_cutflow->Fill(++iCut,bw);
-	  if(dy < 0.7){
+	  if(dy < 1.4){
 	    h_cutflow->Fill(++iCut,bw);
 	    if(mj > 800){
 	      h_cutflow->Fill(++iCut,bw);
@@ -295,68 +348,127 @@ void HistMaker::Loop(){
     
       //Fill SR yields
       int sr=0;
-      if (nFatJet == 4 || nFatJet>=5){
-	if (nFatJet>=5){ sr+=10; }
+      if (nFatJet >= 4){
         if (nBTag >= 1){
 	  if (mj > 600){
 	    h_sigYield->Fill(sr+1,bw);
-	    if (dy < 0.7){ h_sigYield_dy->Fill(sr+1,bw); }
+	    if (dy < 1.4){ h_sigYield_dy->Fill(sr+1,bw); }
 	  }
 	  if (mj > 650){
 	    h_sigYield->Fill(sr+2,bw);
-	      if (dy < 0.7) { h_sigYield_dy->Fill(sr+2,bw); }
+	      if (dy < 1.4) { h_sigYield_dy->Fill(sr+2,bw); }
 	  }
 	  if (mj > 700){
 	    h_sigYield->Fill(sr+3,bw);
-	    if (dy < 0.7){ h_sigYield_dy->Fill(sr+3,bw); }
+	    if (dy < 1.4){ h_sigYield_dy->Fill(sr+3,bw); }
 	  }
 	  if (mj > 750){
 	    h_sigYield->Fill(sr+4,bw);
-	      if (dy < 0.7) { h_sigYield_dy->Fill(sr+4,bw); }
+	      if (dy < 1.4) { h_sigYield_dy->Fill(sr+4,bw); }
 	  }
 	  if (mj > 800){
 	    h_sigYield->Fill(sr+5,bw);
-	      if (dy < 0.7) { h_sigYield_dy->Fill(sr+5,bw); }
+	    if (dy < 1.4) { h_sigYield_dy->Fill(sr+5,bw); }
 	  }
 	}
+	//b-inclusive SRs
+	if (mj > 600){
+	  h_sigYield->Fill(sr+6,bw);
+	  if (dy < 1.4){ h_sigYield_dy->Fill(sr+6,bw); }
+	}
+	if (mj > 650){
+	  h_sigYield->Fill(sr+7,bw);
+	  if (dy < 1.4) { h_sigYield_dy->Fill(sr+7,bw); }
+	}
+	if (mj > 700){
+	  h_sigYield->Fill(sr+8,bw);
+	  if (dy < 1.4){ h_sigYield_dy->Fill(sr+8,bw); }
+	}
+	if (mj > 750){
+	  h_sigYield->Fill(sr+9,bw);
+	  if (dy < 1.4) { h_sigYield_dy->Fill(sr+9,bw); }
+	}
+	if (mj > 800){
+	  h_sigYield->Fill(sr+10,bw);
+	  if (dy < 1.4) { h_sigYield_dy->Fill(sr+10,bw); }
+	}
+      }
+      sr=10;
+      if (nFatJet >= 5){
+        if (nBTag >= 1){
 	  if (mj > 600){
-	    h_sigYield->Fill(sr+6,bw);
-	    if (dy < 0.7){ h_sigYield_dy->Fill(sr+6,bw); }
+	    h_sigYield->Fill(sr+1,bw);
+	    if (dy < 1.4){ h_sigYield_dy->Fill(sr+1,bw); }
 	  }
 	  if (mj > 650){
-	    h_sigYield->Fill(sr+7,bw);
-	      if (dy < 0.7) { h_sigYield_dy->Fill(sr+7,bw); }
+	    h_sigYield->Fill(sr+2,bw);
+	      if (dy < 1.4) { h_sigYield_dy->Fill(sr+2,bw); }
 	  }
 	  if (mj > 700){
-	    h_sigYield->Fill(sr+8,bw);
-	    if (dy < 0.7){ h_sigYield_dy->Fill(sr+8,bw); }
+	    h_sigYield->Fill(sr+3,bw);
+	    if (dy < 1.4){ h_sigYield_dy->Fill(sr+3,bw); }
 	  }
 	  if (mj > 750){
-	    h_sigYield->Fill(sr+9,bw);
-	      if (dy < 0.7) { h_sigYield_dy->Fill(sr+9,bw); }
+	    h_sigYield->Fill(sr+4,bw);
+	      if (dy < 1.4) { h_sigYield_dy->Fill(sr+4,bw); }
 	  }
 	  if (mj > 800){
-	    h_sigYield->Fill(sr+10,bw);
-	      if (dy < 0.7) { h_sigYield_dy->Fill(sr+10,bw); }
+	    h_sigYield->Fill(sr+5,bw);
+	    if (dy < 1.4) { h_sigYield_dy->Fill(sr+5,bw); }
 	  }
+	}
+	//b-inclusive SRs
+	if (mj > 600){
+	  h_sigYield->Fill(sr+6,bw);
+	  if (dy < 1.4){ h_sigYield_dy->Fill(sr+6,bw); }
+	}
+	if (mj > 650){
+	  h_sigYield->Fill(sr+7,bw);
+	  if (dy < 1.4) { h_sigYield_dy->Fill(sr+7,bw); }
+	}
+	if (mj > 700){
+	  h_sigYield->Fill(sr+8,bw);
+	  if (dy < 1.4){ h_sigYield_dy->Fill(sr+8,bw); }
+	}
+	if (mj > 750){
+	  h_sigYield->Fill(sr+9,bw);
+	  if (dy < 1.4) { h_sigYield_dy->Fill(sr+9,bw); }
+	}
+	if (mj > 800){
+	  h_sigYield->Fill(sr+10,bw);
+	  if (dy < 1.4) { h_sigYield_dy->Fill(sr+10,bw); }
+	}
       }
 
       if (nFatJet == 3 and nBTag >= 1){
         h_MJ3->Fill(mj,bw);
 	h_dy_n3->Fill(dy,bw);
       }
-      if(nFatJet == 4 and nBTag >= 1){
+      if(nFatJet >= 4 and nBTag >= 1){
 	h_MJ4->Fill(mj,bw);
 	h_dy_n4->Fill(dy,bw);
-	if(dy < 0.7){
-	  h_MJ4_dy7->Fill(mj,bw);
+	if(dy < 1.4){
+	  h_MJ4_dy14->Fill(mj,bw);
+	  //	  for( int i = 0; i < weight_jet_SFFix70->size(); i++){
+	  //	    h_MJ_m4_bUncert.at(i)->Fill(mj,w*weight_jet_SFFix70->at(i));
+	  //	  }
 	}
       }
+      
       if(nFatJet >= 5 and nBTag >= 1){
-	h_MJ5->Fill(mj,bw);
+	h_MJ5_b1->Fill(mj,bw);
 	h_dy_n5->Fill(dy,bw);
-	if(dy < 0.7){
-	  h_MJ5_dy7->Fill(mj,bw);
+	if(dy < 1.4){
+	  h_MJ5_b1_dy14->Fill(mj,bw);
+	  //	  for( int i = 0; i < weight_jet_SFFix70->size(); i++){
+	  //	    h_MJ_m5_bUncert.at(i)->Fill(mj,w*weight_jet_SFFix70->at(i));
+	  //}
+	}
+      }
+      if(nFatJet >=5){
+	h_MJ5_b9->Fill(mj,w);
+	if(dy < 1.4){
+	  h_MJ5_b9_dy14->Fill(mj,w);
 	}
       }
    }

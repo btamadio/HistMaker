@@ -277,7 +277,7 @@ public :
  private:
    string m_outFileName = "";
    float m_denom = 1.0;
-   float m_lumi = 6.0;
+   float m_lumi = 5.8;
    bool m_isMC = false;
    TFile *m_outFile;
    float m_htCut = 1000.0;
