@@ -3,10 +3,11 @@ import ROOT,csv,argparse
 import pyAMI.client
 import pyAMI.atlas.api as AtlasAPI
 from pyAMI.atlas.api import get_dataset_info
-parser = argparse.ArgumentParser(add_help=False, description='make CSV from root file')
+parser = argparse.ArgumentParser(add_help=False, description='print event yields')
 parser.add_argument('input')
 args = parser.parse_args()
 totEvents = {}
+numFiles = {}
 runList = []
 client = pyAMI.client.Client('atlas')
 AtlasAPI.init()
@@ -55,8 +56,10 @@ for line in open(args.input):
     t.GetEntry(0)
     if t.runNumber in totEvents:
         totEvents[t.runNumber]+=nEntries
+        numFiles[t.runNumber]+=1
     else:
         totEvents[t.runNumber]=nEntries
+        numFiles[t.runNumber]=1
         runList.append(t.runNumber)
 for run in sorted(runList):
     dsName = 'data15_13TeV.00'+str(run)+'.physics_Main.merge.DAOD_EXOT3.r7562_p2521_p2667'
@@ -65,5 +68,5 @@ for run in sorted(runList):
         #dsName = 'data16_13TeV.00'+str(run)+'.physics_Main.merge.DAOD_EXOT3.r7562_p2521_p2667'
     d=AtlasAPI.get_dataset_info(client,dsName)[0]
     totEventsAMI = int(d['totalEvents'])
-    print 'DSID: %s, AMI = %i, NTUP = %i, diff = %i' % (run,totEventsAMI,totEvents[run],totEvents[run]-totEventsAMI)
+    print 'DSID: %s, nFiles = %i, AMI = %i, NTUP = %i, diff = %i' % (run,numFiles[run],totEventsAMI,totEvents[run],totEvents[run]-totEventsAMI)
     
