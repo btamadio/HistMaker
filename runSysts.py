@@ -27,6 +27,7 @@ for treeName in treeNameList:
     cmdList = ['./runHists.py',fileList,treeName]
     p=subprocess.call(cmdList)
 for treeName in treeNameList:
+    p=subprocess.call('mkdir -p hists/RPV6',shell=True)
     p=subprocess.call('hadd hists/RPV6/'+treeName+'.root output/'+treeName+'/*.root',shell=True)
 p = subprocess.call('rm -r output/*',shell=True)
 
@@ -35,5 +36,6 @@ for treeName in treeNameList:
     cmdList = ['./runHists.py',fileList,treeName]
     p=subprocess.call(cmdList)
 for treeName in treeNameList:
+    p=subprocess.call('mkdir -p hists/RPV10',shell=True)
     p=subprocess.call('hadd hists/RPV10/'+treeName+'.root output/'+treeName+'/*.root',shell=True)
 p = subprocess.call('rm -r output/*',shell=True)

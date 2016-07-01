@@ -120,6 +120,9 @@ void HistMaker::Loop(){
    TH1F* h_bPt_tagged = new TH1F(("h_bPt_tagged"+suffix).c_str(),"pT of reco-tagged b-jets",200,0,2000);
    
    //various kinematic & substructure historams
+   TH1F* h_nFatJet_presel = new TH1F(("h_nFatJet_presel"+suffix).c_str(),"n_{fat jet}",10,0.5,10.5);
+   TH1F* h_MJ_presel = new TH1F(("h_MJ_presel"+suffix).c_str(),"MJ",150,0,1500);
+
    TH1F* h_fatjet_pt = new TH1F(("h_fatjet_pt"+suffix).c_str(),"fat jet pT [GeV]",200,0,2000);
    TH1F* h_fatjet_m = new TH1F(("h_fatjet_m"+suffix).c_str(),"fat jet mass [GeV]",200,0,2000);
    TH1F* h_fatjet_eta = new TH1F(("h_fatjet_eta"+suffix).c_str(),"fat jet eta",50,-2.2,2.2);   
@@ -364,7 +367,9 @@ void HistMaker::Loop(){
 	  if(nFatJet >=5){ h_MJ_5jSR_b1.at(i)->Fill(mj,w*weight_jet_SFFix70->at(i)); }
 	}
       }
+      h_nFatJet_presel->Fill(nFatJet,w);
       h_dy_presel->Fill(dy,w);
+      h_MJ_presel->Fill(mj,w);
       if( nFatJet == 3 ){
 	if(nBTag == 0){ h_dy_n3_b0->Fill(dy,bw); }
 	else{ h_dy_n3_b1->Fill(dy,bw); }
