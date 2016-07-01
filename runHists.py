@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 import argparse,ROOT,os,sys
 parser = argparse.ArgumentParser(add_help=False, description='run histos')
-parser.add_argument( '--isMC', dest='isMC',action='store_true',default=False,help='Running on MC')
+parser.add_argument( '--isMC', dest='isMC',action='store_true',default=True,help='Running on MC')
 parser.add_argument( '--sumWeights', dest='sumWeights',action='store_true',default=False,help='Use sum of weights as denominator')
 parser.add_argument('input')
+parser.add_argument('treeName')
 args = parser.parse_args()
 i=0
 denomDict = {} #dsid: denom
@@ -31,13 +32,14 @@ else:
         dsidPairs.append((line.rstrip(),1))
 
 for p in dsidPairs:
-    cmd = './RunHists '+p[0]+' output/output_'+str(i)+'.root'
+    os.system('mkdir -p output/'+args.treeName)
+    cmd = './RunHists '+p[0]+' output/'+args.treeName+'/output_'+str(i)+'.root'
     if args.isMC:
         cmd+=' '+str(denomDict[p[1]])
     else:
         f = ROOT.TFile.Open(p[0])
         initEvents = f.Get('MetaData_EventCount').GetBinContent(2)
         cmd+=' '+str(initEvents)
-#    print cmd
+    cmd+=' '+args.treeName
     os.system(cmd)
     i+=1

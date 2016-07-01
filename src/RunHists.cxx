@@ -7,16 +7,17 @@
 using namespace std;
 class TemplateMaker;
 int main(int argc, char *argv[]){
-  if (argc < 4){
+  if (argc < 5){
     cout<<"Not enough command line arguments."<<endl;
-    cout<<"usage: RunHists <infile> <outfile> <denom>"<<endl;
+    cout<<"usage: RunHists <infile> <outfile> <denom> <treeName>"<<endl;
     return 0;
   }
   string inFileName = argv[1];
   string outFileName = argv[2];
   float denom = atof(argv[3]);
+  string treeName = argv[4];
   TFile *f = TFile::Open(inFileName.c_str());
-  TTree *t = (TTree*)f->Get("outTree/nominal");
+  TTree *t = (TTree*)f->Get(("outTree/"+treeName).c_str());
   HistMaker h(t,outFileName,denom);
   h.SetupOutput();
   h.Loop();
