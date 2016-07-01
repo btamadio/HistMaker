@@ -274,6 +274,7 @@ public :
    static bool reorder(const TLorentzVector &, const TLorentzVector &);
    bool passGRL(int,int);
    int readGRL();
+   void SetLumi(float lumi){ m_lumi = lumi; }
  private:
    string m_outFileName = "";
    float m_denom = 1.0;

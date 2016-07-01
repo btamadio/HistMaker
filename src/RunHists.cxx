@@ -19,6 +19,7 @@ int main(int argc, char *argv[]){
   TFile *f = TFile::Open(inFileName.c_str());
   TTree *t = (TTree*)f->Get(("outTree/"+treeName).c_str());
   HistMaker h(t,outFileName,denom);
+  h.SetLumi(5.8);
   h.SetupOutput();
   h.Loop();
   return 0;

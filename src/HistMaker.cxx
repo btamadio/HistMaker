@@ -39,116 +39,87 @@ void HistMaker::Loop(){
    h_cutflow->GetXaxis()->SetBinLabel(9,"|#Delta #eta| < 1.4");
    h_cutflow->GetXaxis()->SetBinLabel(10,"MJ > 800 GeV");
 
-   TH1F *h_eventCat = new TH1F(("h_eventcat"+suffix).c_str(),"event categories",18,0.5,18.5);
-   h_eventCat->GetXaxis()->SetBinLabel(1,"= 3 jet, b-veto, total");
-   h_eventCat->GetXaxis()->SetBinLabel(2,"= 3 jet, b-tag, total");
-   h_eventCat->GetXaxis()->SetBinLabel(3,"= 3 jet, b-inc, total");
-   h_eventCat->GetXaxis()->SetBinLabel(4,"= 3 jet, b-veto, 200 < MJ < 600");
-   h_eventCat->GetXaxis()->SetBinLabel(5,"= 3 jet, b-tag, 200 < MJ < 600");
-   h_eventCat->GetXaxis()->SetBinLabel(6,"= 3 jet, b-inc, 200 < MJ < 600");
-   h_eventCat->GetXaxis()->SetBinLabel(7,"= 4 jet, b-veto, total");
-   h_eventCat->GetXaxis()->SetBinLabel(8,"= 4 jet, b-tag, total");
-   h_eventCat->GetXaxis()->SetBinLabel(9,"= 4 jet, b-inc, total");
-   h_eventCat->GetXaxis()->SetBinLabel(10,"= 4 jet, b-veto, 200 < MJ < 600");
-   h_eventCat->GetXaxis()->SetBinLabel(11,"= 4 jet, b-tag, 200 < MJ < 600");
-   h_eventCat->GetXaxis()->SetBinLabel(12,"= 4 jet, b-inc, 200 < MJ < 600");
-   h_eventCat->GetXaxis()->SetBinLabel(13,"#geq 5 jet, b-veto, total");
-   h_eventCat->GetXaxis()->SetBinLabel(14,"#geq 5 jet, b-tag, total");
-   h_eventCat->GetXaxis()->SetBinLabel(15,"#geq 5 jet, b-inc, total");
-   h_eventCat->GetXaxis()->SetBinLabel(16,"#geq 5 jet, b-veto, 200 < MJ < 600");
-   h_eventCat->GetXaxis()->SetBinLabel(17,"#geq 5 jet, b-tag, 200 < MJ < 600");
-   h_eventCat->GetXaxis()->SetBinLabel(18,"#geq 5 jet, b-inc, 200 < MJ < 600");
+   TH1F *h_CRyield = new TH1F(("h_CRyield"+suffix).c_str(),"CR yields",2,0.5,2.5);
+   h_CRyield->GetXaxis()->SetBinLabel(1,"= 3 jet, b-veto");
+   h_CRyield->GetXaxis()->SetBinLabel(2,"= 3 jet, b-tag, |#Delta #eta| > 1.4");
 
-   TH1F* h_sigYield = new TH1F(("h_sigyield"+suffix).c_str(),"signal yield",20,0.5,20.5);
-   h_sigYield->GetXaxis()->SetBinLabel(1,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(2,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(3,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.7 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(4,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.75 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(5,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.8 TeV");
+   TH1F* h_SRyield = new TH1F(("h_SRyield"+suffix).c_str(),"signal region yield",20,0.5,20.5);
+   h_SRyield->GetXaxis()->SetBinLabel(1,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(2,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(3,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.7 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(4,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.75 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(5,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.8 TeV");
 
-   h_sigYield->GetXaxis()->SetBinLabel(6,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.6 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(7,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.65 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(8,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(9,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(10,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
+   h_SRyield->GetXaxis()->SetBinLabel(6,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.6 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(7,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.65 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(8,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(9,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(10,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
 
-   h_sigYield->GetXaxis()->SetBinLabel(11,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(12,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(13,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.7 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(14,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.75 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(15,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.8 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(11,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(12,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(13,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.7 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(14,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.75 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(15,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.8 TeV");
 
-   h_sigYield->GetXaxis()->SetBinLabel(16,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.6 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(17,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.65 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(18,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(19,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
-   h_sigYield->GetXaxis()->SetBinLabel(20,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
+   h_SRyield->GetXaxis()->SetBinLabel(16,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.6 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(17,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.65 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(18,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(19,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
+   h_SRyield->GetXaxis()->SetBinLabel(20,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
 
+   TH1F *h_VRyield = new TH1F(("h_VRyield"+suffix).c_str(),"VR yields",20,0.5,20.5);
+   h_VRyield->GetXaxis()->SetBinLabel(1,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(2,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(3,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.7 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(4,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.75 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(5,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.8 TeV");
 
-   TH1F* h_sigYield_dy = new TH1F(("h_sigyield_dy"+suffix).c_str(),"signal yield, with |#Delta #eta| < 1.4",20,0.5,20.5);
-   h_sigYield_dy->GetXaxis()->SetBinLabel(1,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(2,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(3,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.7 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(4,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.75 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(5,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.8 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(6,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.6 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(7,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.65 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(8,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(9,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(10,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
 
-   h_sigYield_dy->GetXaxis()->SetBinLabel(6,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.6 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(7,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.65 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(8,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(9,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(10,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
+   h_VRyield->GetXaxis()->SetBinLabel(11,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(12,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(13,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.7 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(14,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.75 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(15,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.8 TeV");
 
-   h_sigYield_dy->GetXaxis()->SetBinLabel(11,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(12,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(13,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.7 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(14,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.75 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(15,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.8 TeV");
-
-   h_sigYield_dy->GetXaxis()->SetBinLabel(16,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.6 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(17,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.65 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(18,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(19,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
-   h_sigYield_dy->GetXaxis()->SetBinLabel(20,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
-
-   TH1F *h_VRyield = new TH1F(("h_VRyield"+suffix).c_str(),"VR yields",12,0.5,12.5);
-   h_VRyield->GetXaxis()->SetBinLabel(1,"3 jet, b-veto, |#Delta #eta| < 0.7");
-   h_VRyield->GetXaxis()->SetBinLabel(2,"3 jet, b-veto, |#Delta #eta| > 0.7");
-   h_VRyield->GetXaxis()->SetBinLabel(3,"3 jet, b-tag, |#Delta #eta| < 0.7");
-   h_VRyield->GetXaxis()->SetBinLabel(4,"3 jet, b-tag, |#Delta #eta| > 0.7");
-   h_VRyield->GetXaxis()->SetBinLabel(5,"4 jet, b-veto,  |#Delta #eta| < 0.7");
-   h_VRyield->GetXaxis()->SetBinLabel(6,"4 jet, b-veto, |#Delta #eta| > 0.7");
-   h_VRyield->GetXaxis()->SetBinLabel(7,"4 jet, b-tag  |#Delta #eta| < 0.7");
-   h_VRyield->GetXaxis()->SetBinLabel(8,"4 jet, b-tag, |#Delta #eta| > 0.7");
-   h_VRyield->GetXaxis()->SetBinLabel(9,"5 jet, b-veto, |#Delta #eta| < 0.7");
-   h_VRyield->GetXaxis()->SetBinLabel(10,"5 jet, b-veto, |#Delta #eta| > 0.7");
-   h_VRyield->GetXaxis()->SetBinLabel(11,"5 jet, b-tag, |#Delta #eta| < 0.7");
-   h_VRyield->GetXaxis()->SetBinLabel(12,"5 jet, b-tag, |#Delta #eta| > 0.7");
+   h_VRyield->GetXaxis()->SetBinLabel(16,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.6 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(17,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.65 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(18,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(19,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
+   h_VRyield->GetXaxis()->SetBinLabel(20,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
    
-   vector<TH1F*> h_MJ_m5_bUncert;
-   vector<TH1F*> h_MJ_m4_bUncert;
+   vector<TH1F*> h_MJ_4jSR_b1;
+   vector<TH1F*> h_MJ_5jSR_b1;
+   
+   TH1F *h_MJ_4jSR = new TH1F(("h_MJ_4jSR"+suffix).c_str(),"MJ",150,0,1500);
+   TH1F *h_MJ_5jSR = new TH1F(("h_MJ_5jSR"+suffix).c_str(),"MJ",150,0,1500);
+   
+   //MJ distributions for the two b-tag signal regions, for each b-tagging systematic variation
    for ( int i = 0; i < 51; i++){
-     h_MJ_m5_bUncert.push_back( new TH1F(("h_MJ_m5_bUncert"+to_string(i)+"_"+suffix).c_str(),"MJ",150,0,1500));
-     h_MJ_m4_bUncert.push_back(new TH1F(("h_MJ_m4_bUncert"+to_string(i)+"_"+suffix).c_str(),"MJ",150,0,1500));
+     h_MJ_4jSR_b1.push_back(new TH1F(("h_MJ_4jSR_b1_"+to_string(i)+suffix).c_str(),"MJ",150,0,1500));
+     h_MJ_5jSR_b1.push_back(new TH1F(("h_MJ_5jSR_b1_"+to_string(i)+suffix).c_str(),"MJ",150,0,1500));
    }
 
-   TH1F* h_MJ3 = new TH1F(("h_MJ3"+suffix).c_str(),"M_{J}^{#Sigma}, n_{fatjet} == 3, b-tag",150,0,1500);
-   TH1F* h_MJ4 = new TH1F(("h_MJ4"+suffix).c_str(),"M_{J}^{#Sigma}, n_{fatjet} >= 4, b-tag",150,0,1500);
-   TH1F* h_MJ4_dy14 = new TH1F(("h_MJ4_dy14"+suffix).c_str(),"M_{J}^{#Sigma}, |#Delta #eta| < 1.4, n_{fatjet} >= 4, b-tag",150,0,1500);
-
-   TH1F* h_MJ5_b1 = new TH1F(("h_MJ_m5_b1"+suffix).c_str(),"M_{J}^{#Sigma}, n_{fatjet} #geq 5, b-tag",150,0,1500);
-   TH1F* h_MJ5_b9 = new TH1F(("h_MJ_m5_b9"+suffix).c_str(),"M_{J}^{#Sigma}, n_{fatjet} #geq 5, b-inc",150,0,1500);
-   TH1F* h_MJ5_b1_dy14 = new TH1F(("h_MJ_m5_b1_dy14"+suffix).c_str(),"M_{J}^{#Sigma}, |#Delta #eta| < 1.4, n_{fatjet} #geq 5, b-tag",150,0,1500);
-   TH1F* h_MJ5_b9_dy14 = new TH1F(("h_MJ_m5_b9_dy14"+suffix).c_str(),"M_{J}^{#Sigma}, |#Delta #eta| < 1.4, n_{fatjet} #geq 5, b-inc",150,0,1500);
-     
+   //various dy histograms
    TH1F* h_dy_presel = new TH1F(("h_dy_presel"+suffix).c_str(),"#Delta #eta",100,0,5);
-   TH1F* h_dy_n3 = new TH1F(("h_dy_n3"+suffix).c_str(),"#Delta #eta, n_{fatjet} == 3, b-tag",100,0,5);
-   TH1F* h_dy_n4 = new TH1F(("h_dy_n4"+suffix).c_str(),"#Delta #eta, n_{fatjet} == 4, b-tag",100,0,5);
-   TH1F* h_dy_n5 = new TH1F(("h_dy_n5"+suffix).c_str(),"#Delta #eta, n_{fatjet} #geq 5, b-tag",100,0,5);
+   TH1F* h_dy_n3_b0 = new TH1F(("h_dy_n3_b0"+suffix).c_str(),"#Delta #eta, n_{fatjet} == 3, b-veto",100,0,5);
+   TH1F* h_dy_n3_b1 = new TH1F(("h_dy_n3_b1"+suffix).c_str(),"#Delta #eta, n_{fatjet} == 3, b-tag",100,0,5);
+   TH1F* h_dy_m4_b1 = new TH1F(("h_dy_m4_b1"+suffix).c_str(),"#Delta #eta, n_{fatjet} #geq 4, b-tag",100,0,5);
+   TH1F* h_dy_m4_b9 = new TH1F(("h_dy_m4_b9"+suffix).c_str(),"#Delta #eta, n_{fatjet} #geq 4, b-inc",100,0,5);
+   TH1F* h_dy_m5_b1 = new TH1F(("h_dy_m5_b1"+suffix).c_str(),"#Delta #eta, n_{fatjet} #geq 5, b-tag",100,0,5);
+   TH1F* h_dy_m5_b9 = new TH1F(("h_dy_m5_b9"+suffix).c_str(),"#Delta #eta, n_{fatjet} #geq 5, b-inc",100,0,5);
 
+   //stuff for checking b-tagging efficiency
    TH1F* h_nTruB = new TH1F(("h_nTruB"+suffix).c_str(),"number of truth b-jets",5,-0.5,5.5);
    TH1F* h_bPt = new TH1F(("h_bPt"+suffix).c_str(),"pT of truth-tagged b-jets",200,0,2000);
    TH1F* h_bPt_tagged = new TH1F(("h_bPt_tagged"+suffix).c_str(),"pT of reco-tagged b-jets",200,0,2000);
    
+   //various kinematic & substructure historams
    TH1F* h_fatjet_pt = new TH1F(("h_fatjet_pt"+suffix).c_str(),"fat jet pT [GeV]",200,0,2000);
    TH1F* h_fatjet_m = new TH1F(("h_fatjet_m"+suffix).c_str(),"fat jet mass [GeV]",200,0,2000);
    TH1F* h_fatjet_eta = new TH1F(("h_fatjet_eta"+suffix).c_str(),"fat jet eta",50,-2.2,2.2);   
@@ -166,8 +137,6 @@ void HistMaker::Loop(){
      fChain->GetEntry(0);
      h_cutflow->SetBinContent(1,1E6*m_lumi*weight);
      h_cutflow->SetBinContent(2,1E6*m_lumi*weight);
-     cout<<"mcChannelNumber = "<<mcChannelNumber<<"\t #sigmaL = "<<weight*1E6*m_lumi<<endl;
-     cout<<"denom = "<<m_denom<<endl;
      h_cutflow->GetXaxis()->SetBinLabel(1,"#sigma L");
      h_cutflow->GetXaxis()->SetBinLabel(2,"#sigma L");
      h_cutflow->GetXaxis()->SetBinLabel(3,"derivation");
@@ -187,7 +156,6 @@ void HistMaker::Loop(){
       float mj = 0;
       int nBTag = 0;
       float dy = 0;
-      int eventCat = 0;
       bool passLeadJet = false;
       int nFatJet = 0;
       vector<TLorentzVector> fj4mom;
@@ -282,198 +250,137 @@ void HistMaker::Loop(){
 	  }
 	}
       }
-      if (500 < mj < 650){
-	if( nFatJet == 3){
-	  if( nBTag == 0){
-	    if( dy < 0.7 ){ h_VRyield->Fill(1,bw); }
-	    else{ h_VRyield->Fill(2,bw); }
-	  }
-	  else{
-	    if( dy < 0.7 ){ h_VRyield->Fill(3,bw); }
-	    else{ h_VRyield->Fill(4,bw); }
-	  }
+      //fill CR yieds (2 CRs)
+      if(nFatJet==3){
+	if( nBTag == 0 ){
+	  //b-veto CR
+	  h_CRyield->Fill(1,bw);
 	}
-	if( nFatJet == 4){
-	  if( nBTag == 0){
-	    if( dy < 0.7 ){ h_VRyield->Fill(5,bw); }
-	    else{ h_VRyield->Fill(6,bw); }
-	  }
-	  else{
-	    if( dy < 0.7 ){ h_VRyield->Fill(7,bw); }
-	    else{ h_VRyield->Fill(8,bw); }
-	  }
-	}	
-	if( nFatJet == 5){
-	  if( nBTag == 0){
-	    if( dy < 0.7 ){ h_VRyield->Fill(9,bw); }
-	    else{ h_VRyield->Fill(10,bw); }
-	  }
-	  else{
-	    if( dy < 0.7 ){ h_VRyield->Fill(11,bw); }
-	    else{ h_VRyield->Fill(12,bw); }
-	  }
-	}
-
-      }
-      if (nFatJet == 3){
-        if (nBTag == 0){ h_eventCat->Fill(1,bw); }
-        else{ h_eventCat->Fill(2,bw);}
-        h_eventCat->Fill(3,w);
-	if (mj > 200 && mj < 600){
-	  if (nBTag == 0){ h_eventCat->Fill(4,bw);}
-	  else{h_eventCat->Fill(5,bw);}
-	  h_eventCat->Fill(6,w);
+	else if( dy > 1.4 ){
+	  //b-tag CR
+	  h_CRyield->Fill(2,bw);
 	}
       }
-      if (nFatJet == 4){
-        if (nBTag == 0){ h_eventCat->Fill(7,bw); }
-        else{ h_eventCat->Fill(8,bw);}
-        h_eventCat->Fill(9,w);
-	if (mj > 200 && mj < 600){
-	  if (nBTag == 0){ h_eventCat->Fill(10,bw);}
-	  else{h_eventCat->Fill(11,bw);}
-	  h_eventCat->Fill(12,w);
-	}
-      }
-      if (nFatJet >= 4){
-        if (nBTag == 0){ h_eventCat->Fill(13,bw); }
-        else{ h_eventCat->Fill(14,bw);}
-        h_eventCat->Fill(15,w);
-	if (mj > 200 && mj < 600){
-	  if (nBTag == 0){ h_eventCat->Fill(16,bw);}
-	  else{h_eventCat->Fill(17,bw);}
-	  h_eventCat->Fill(18,w);
-	}
-      }
-    
       //Fill SR yields
       int sr=0;
       if (nFatJet >= 4){
         if (nBTag >= 1){
-	  if (mj > 600){
-	    h_sigYield->Fill(sr+1,bw);
-	    if (dy < 1.4){ h_sigYield_dy->Fill(sr+1,bw); }
-	  }
-	  if (mj > 650){
-	    h_sigYield->Fill(sr+2,bw);
-	      if (dy < 1.4) { h_sigYield_dy->Fill(sr+2,bw); }
-	  }
-	  if (mj > 700){
-	    h_sigYield->Fill(sr+3,bw);
-	    if (dy < 1.4){ h_sigYield_dy->Fill(sr+3,bw); }
-	  }
-	  if (mj > 750){
-	    h_sigYield->Fill(sr+4,bw);
-	      if (dy < 1.4) { h_sigYield_dy->Fill(sr+4,bw); }
-	  }
-	  if (mj > 800){
-	    h_sigYield->Fill(sr+5,bw);
-	    if (dy < 1.4) { h_sigYield_dy->Fill(sr+5,bw); }
-	  }
-	}
-	//b-inclusive SRs
-	if (mj > 600){
-	  h_sigYield->Fill(sr+6,bw);
-	  if (dy < 1.4){ h_sigYield_dy->Fill(sr+6,bw); }
-	}
-	if (mj > 650){
-	  h_sigYield->Fill(sr+7,bw);
-	  if (dy < 1.4) { h_sigYield_dy->Fill(sr+7,bw); }
-	}
-	if (mj > 700){
-	  h_sigYield->Fill(sr+8,bw);
-	  if (dy < 1.4){ h_sigYield_dy->Fill(sr+8,bw); }
-	}
-	if (mj > 750){
-	  h_sigYield->Fill(sr+9,bw);
-	  if (dy < 1.4) { h_sigYield_dy->Fill(sr+9,bw); }
-	}
-	if (mj > 800){
-	  h_sigYield->Fill(sr+10,bw);
-	  if (dy < 1.4) { h_sigYield_dy->Fill(sr+10,bw); }
-	}
+      	  if (mj > 600){
+      	    if (dy < 1.4){ h_SRyield->Fill(sr+1,bw); }
+	    else{ h_VRyield->Fill(sr+1,bw); }
+      	  }
+      	  if (mj > 650){
+	    if (dy < 1.4) { h_SRyield->Fill(sr+2,bw); }
+	    else{ h_VRyield->Fill(sr+2,bw); }
+      	  }
+      	  if (mj > 700){
+      	    if (dy < 1.4){ h_SRyield->Fill(sr+3,bw); }
+	    else{ h_VRyield->Fill(sr+3,bw); }
+      	  }
+      	  if (mj > 750){
+	    if (dy < 1.4) { h_SRyield->Fill(sr+4,bw); }
+	    else{ h_VRyield->Fill(sr+4,bw); }
+      	  }
+      	  if (mj > 800){
+      	    if (dy < 1.4) { h_SRyield->Fill(sr+5,bw); }
+	    else{ h_VRyield->Fill(sr+5,bw); }
+      	  }
+      	}
+      	//b-inclusive SRs
+      	if (mj > 600){
+      	  if (dy < 1.4){ h_SRyield->Fill(sr+6,w); }
+	  else{ h_VRyield->Fill(sr+6,w); }
+      	}
+      	if (mj > 650){
+      	  if (dy < 1.4) { h_SRyield->Fill(sr+7,w); }
+	  else{ h_VRyield->Fill(sr+7,w); }
+      	}
+      	if (mj > 700){
+      	  if (dy < 1.4){ h_SRyield->Fill(sr+8,w); }
+	  else{ h_VRyield->Fill(sr+8,w); }
+      	}
+      	if (mj > 750){
+      	  if (dy < 1.4) { h_SRyield->Fill(sr+9,w); }
+	  else{ h_VRyield->Fill(sr+9,w); }
+      	}
+      	if (mj > 800){
+      	  if (dy < 1.4) { h_SRyield->Fill(sr+10,w); }
+	  else{ h_VRyield->Fill(sr+10,w); }
+      	}
       }
       sr=10;
       if (nFatJet >= 5){
         if (nBTag >= 1){
-	  if (mj > 600){
-	    h_sigYield->Fill(sr+1,bw);
-	    if (dy < 1.4){ h_sigYield_dy->Fill(sr+1,bw); }
-	  }
-	  if (mj > 650){
-	    h_sigYield->Fill(sr+2,bw);
-	      if (dy < 1.4) { h_sigYield_dy->Fill(sr+2,bw); }
-	  }
-	  if (mj > 700){
-	    h_sigYield->Fill(sr+3,bw);
-	    if (dy < 1.4){ h_sigYield_dy->Fill(sr+3,bw); }
-	  }
-	  if (mj > 750){
-	    h_sigYield->Fill(sr+4,bw);
-	      if (dy < 1.4) { h_sigYield_dy->Fill(sr+4,bw); }
-	  }
-	  if (mj > 800){
-	    h_sigYield->Fill(sr+5,bw);
-	    if (dy < 1.4) { h_sigYield_dy->Fill(sr+5,bw); }
-	  }
-	}
-	//b-inclusive SRs
-	if (mj > 600){
-	  h_sigYield->Fill(sr+6,bw);
-	  if (dy < 1.4){ h_sigYield_dy->Fill(sr+6,bw); }
-	}
-	if (mj > 650){
-	  h_sigYield->Fill(sr+7,bw);
-	  if (dy < 1.4) { h_sigYield_dy->Fill(sr+7,bw); }
-	}
-	if (mj > 700){
-	  h_sigYield->Fill(sr+8,bw);
-	  if (dy < 1.4){ h_sigYield_dy->Fill(sr+8,bw); }
-	}
-	if (mj > 750){
-	  h_sigYield->Fill(sr+9,bw);
-	  if (dy < 1.4) { h_sigYield_dy->Fill(sr+9,bw); }
-	}
-	if (mj > 800){
-	  h_sigYield->Fill(sr+10,bw);
-	  if (dy < 1.4) { h_sigYield_dy->Fill(sr+10,bw); }
+      	  if (mj > 600){
+      	    if (dy < 1.4){ h_SRyield->Fill(sr+1,bw); }
+	    else{ h_VRyield->Fill(sr+1,bw); }
+      	  }
+      	  if (mj > 650){
+      	    if (dy < 1.4) { h_SRyield->Fill(sr+2,bw); }
+	    else{ h_VRyield->Fill(sr+2,bw); }
+      	  }
+      	  if (mj > 700){
+      	    if (dy < 1.4){ h_SRyield->Fill(sr+3,bw); }
+	    else{ h_VRyield->Fill(sr+3,bw); }
+      	  }
+      	  if (mj > 750){
+      	    if (dy < 1.4) { h_SRyield->Fill(sr+4,bw); }
+	    else{ h_VRyield->Fill(sr+4,bw); }
+      	  }
+      	  if (mj > 800){
+      	    if (dy < 1.4) { h_SRyield->Fill(sr+5,bw); }
+	    else{ h_VRyield->Fill(sr+5,bw); }
+      	  }
+      	}
+      	//b-inclusive SRs
+      	if (mj > 600){
+      	  if (dy < 1.4){ h_SRyield->Fill(sr+6,w); }
+	  else{ h_VRyield->Fill(sr+6,w); }
+      	}
+      	if (mj > 650){
+      	  if (dy < 1.4) { h_SRyield->Fill(sr+7,w); }
+	  else{ h_VRyield->Fill(sr+7,w); }
+      	}
+      	if (mj > 700){
+      	  if (dy < 1.4){ h_SRyield->Fill(sr+8,w); }
+	  else{ h_VRyield->Fill(sr+8,w); }
+      	}
+      	if (mj > 750){
+      	  if (dy < 1.4) { h_SRyield->Fill(sr+9,w); }
+	  else{ h_VRyield->Fill(sr+9,w); }
+      	}
+      	if (mj > 800){
+      	  if (dy < 1.4) { h_SRyield->Fill(sr+10,w); }
+	  else{ h_VRyield->Fill(sr+10,w); }
+      	}
+      }
+      if(dy < 1.4){
+	if(nFatJet >= 4){ h_MJ_4jSR->Fill(mj,w); }
+	if(nFatJet >= 5){ h_MJ_5jSR->Fill(mj,w); }
+      }
+      for(int i = 0; i < 51; i++){
+	if ( dy < 1.4 && nBTag >= 1){
+	  if(nFatJet >=4){ h_MJ_4jSR_b1.at(i)->Fill(mj,w*weight_jet_SFFix70->at(i)); }
+	  if(nFatJet >=5){ h_MJ_5jSR_b1.at(i)->Fill(mj,w*weight_jet_SFFix70->at(i)); }
 	}
       }
-
-      if (nFatJet == 3 and nBTag >= 1){
-        h_MJ3->Fill(mj,bw);
-	h_dy_n3->Fill(dy,bw);
+      h_dy_presel->Fill(dy,w);
+      if( nFatJet == 3 ){
+	if(nBTag == 0){ h_dy_n3_b0->Fill(dy,bw); }
+	else{ h_dy_n3_b1->Fill(dy,bw); }
       }
-      if(nFatJet >= 4 and nBTag >= 1){
-	h_MJ4->Fill(mj,bw);
-	h_dy_n4->Fill(dy,bw);
-	if(dy < 1.4){
-	  h_MJ4_dy14->Fill(mj,bw);
-	  //	  for( int i = 0; i < weight_jet_SFFix70->size(); i++){
-	  //	    h_MJ_m4_bUncert.at(i)->Fill(mj,w*weight_jet_SFFix70->at(i));
-	  //	  }
-	}
+      if( nFatJet >= 4){
+	h_dy_m4_b9->Fill(dy,w);
+	if(nBTag >=1){ h_dy_m4_b1->Fill(dy,bw); }
       }
-      
-      if(nFatJet >= 5 and nBTag >= 1){
-	h_MJ5_b1->Fill(mj,bw);
-	h_dy_n5->Fill(dy,bw);
-	if(dy < 1.4){
-	  h_MJ5_b1_dy14->Fill(mj,bw);
-	  //	  for( int i = 0; i < weight_jet_SFFix70->size(); i++){
-	  //	    h_MJ_m5_bUncert.at(i)->Fill(mj,w*weight_jet_SFFix70->at(i));
-	  //}
-	}
-      }
-      if(nFatJet >=5){
-	h_MJ5_b9->Fill(mj,w);
-	if(dy < 1.4){
-	  h_MJ5_b9_dy14->Fill(mj,w);
-	}
+      if( nFatJet >= 5){
+	h_dy_m5_b9->Fill(dy,w);
+	if(nBTag >=1){ h_dy_m5_b1->Fill(dy,bw); }
       }
    }
    m_outFile->cd();
    m_outFile->Write();
+   cout<<"File written: "<<m_outFileName<<endl;
 }
 
 bool HistMaker::reorder(const TLorentzVector &a, const TLorentzVector &b)
