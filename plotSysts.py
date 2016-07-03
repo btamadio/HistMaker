@@ -5,7 +5,7 @@ ROOT.gROOT.LoadMacro('/global/homes/b/btamadio/atlasstyle/AtlasStyle.C')
 ROOT.gROOT.LoadMacro('/global/homes/b/btamadio/atlasstyle/AtlasLabels.C')
 ROOT.SetAtlasStyle()
 ROOT.gStyle.SetPaintTextFormat('2.1f')
-
+ROOT.gROOT.SetBatch(True)
 parser = argparse.ArgumentParser(add_help=False, description='Plot Systs')
 parser.add_argument('input')
 args = parser.parse_args()
@@ -32,16 +32,20 @@ lumiLatex=ROOT.TLatex()
 lumiString = '#int L dt = 5.8 fb^{-1}'
 
 mjHistNames=['h_MJ_4jSR','h_MJ_5jSR','h_MJ_4jSR_b1_0','h_MJ_5jSR_b1_0']
+
 srNames = ['4jSR','5jSR','4jSRb1','5jSRb1']
 canMJ=[]
 pad1=[]
 pad2=[]
 legMJ=[]
+#for use in file names
+srLabs = ['m4_b9','m5_b9','m4_b1','m5_b1']
+
 ci=0
 for i in range(len(dsidList)):
     for j in range(len(systList)):
-        for k in range(4):
-            if i==0 and j==j and k ==0:
+        for k in range(len(mjHistNames)):
+            if i==i and j==j and k ==k:
                 canMJ.append(ROOT.TCanvas('canMJ_'+str(ci),'canMJ_'+str(ci),800,800))
                 canMJ[ci].cd()
 
@@ -83,9 +87,13 @@ for i in range(len(dsidList)):
                 if downHist:
                     downHist.Draw('hist same')
                 legMJ[ci].Draw()
-                ROOT.ATLASLabel(0.5,0.88,'Simulation Internal')
-                lumiLatex.DrawLatexNDC(0.6,0.6,lumiString)
+                ROOT.ATLASLabel(0.47,0.88,'Simulation Internal')
+                lumiLatex.DrawLatexNDC(0.63,0.6,lumiString)
                 lumiLatex.DrawLatexNDC(0.7,0.5,srNames[k])
+                mG = str(pointDict[int(dsidList[i])][0])
+                mX = str(pointDict[int(dsidList[i])][1])
+                massString='#splitline{m_{#tilde{g}} = '+mG+'}{m_{#tilde{#chi}} = '+mX+'}'
+                lumiLatex.DrawLatexNDC(0.2,0.75,massString)
                 canMJ[ci].cd()
                 pad2.append(ROOT.TPad('pad2_'+str(i),'pad2_'+str(i),0,0.05,1,0.3))
                 pad2[ci].SetTopMargin(0)
@@ -112,7 +120,10 @@ for i in range(len(dsidList)):
                 ratHistUp.GetXaxis().SetTitle('MJ [GeV]')
                 for bin in range(1,ratHistUp.GetNbinsX()):
                     endInt = upHist.GetNbinsX()+1
-                    ratHistUp.SetBinContent(bin,upHist.Integral(bin,endInt)/nomHist.Integral(bin,endInt))
+                    if nomHist.Integral(bin,endInt)!=0:
+                        ratHistUp.SetBinContent(bin,upHist.Integral(bin,endInt)/nomHist.Integral(bin,endInt))
+                    else:
+                        ratHistUp.SetBinContent(bin,1)
                 ratHistUp.SetMaximum(1.5)
                 ratHistUp.SetMinimum(0.5)
                 ratHistUp.Draw('hist')
@@ -120,9 +131,18 @@ for i in range(len(dsidList)):
                     ratHistDown = downHist.Clone('ratioDown')
                     for bin in range(1,ratHistDown.GetNbinsX()):
                         endInt = downHist.GetNbinsX()+1
-                        ratHistDown.SetBinContent(bin,downHist.Integral(bin,endInt)/nomHist.Integral(bin,endInt))
+                        if nomHist.Integral(bin,endInt) != 0:
+                            ratHistDown.SetBinContent(bin,downHist.Integral(bin,endInt)/nomHist.Integral(bin,endInt))
+                        else:
+                            ratHistDown.SetBinContent(bin,1)
                         ratHistDown.Draw('hist same')
-                canMJ[ci].Print('/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/'+str(ci)+'.pdf')
-                subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/*.pdf',shell=True)
+                subprocess.call('mkdir -p /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/'+str(dsidList[i]),shell=True)
+                subprocess.call('chmod a+rx /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/'+str(dsidList[i]),shell=True)
+                outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/'+str(dsidList[i])+'/'
+                outFileName+='MJ_'+srLabs[k]+'_'+systList[j]
+                canMJ[ci].Print(outFileName+'.pdf')
+                canMJ[ci].Print(outFileName+'.png')
+                canMJ[ci].Print(outFileName+'.C')
+                subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/'+str(dsidList[i])+'/*',shell=True)
                 ci+=1
 
