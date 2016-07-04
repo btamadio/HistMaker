@@ -10,7 +10,17 @@ parser = argparse.ArgumentParser(add_help=False, description='Plot Systs')
 parser.add_argument('input')
 args = parser.parse_args()
 filePath = args.input.strip('/')
-
+systDict={'JET_EtaIntercalibration_NonClosure':'Small-R #eta-intercalibration',
+          'JET_GroupedNP_1':'Small-R NP 1',
+          'JET_GroupedNP_2':'Small-R NP 2',
+          'JET_GroupedNP_3':'Small-R NP 3',
+          'JET_JER_SINGLE_NP':'Small-R JER',
+          'JET_RelativeNonClosure_AFII':'Small-R AFII non-closure',
+          'JET_Rtrk_Baseline_All':'R_{trk} Baseline',
+          'JET_Rtrk_Modelling_All':'R_{trk} Modelling',
+          'JET_Rtrk_TotalStat_All':'R_{trk} Statistics',
+          'JET_Rtrk_Tracking_All':'R_{trk} Tracking',
+          'JMR_Smear':'Large-R JMR'}
 #get list of systematics from file names
 systList = []
 dsidList = []
@@ -64,22 +74,26 @@ for i in range(len(dsidList)):
                 if downFile:
                     downHist = downFile.Get(mjHistNames[k]+'_'+str(dsidList[i]))
                 upHist.SetLineColor(ROOT.kBlue)
+                upHist.SetLineWidth(2)
                 upHist.Rebin(5)
 
                 nomHist.SetLineColor(ROOT.kBlack)
+                nomHist.SetFillColor(ROOT.kGray)
+                nomHist.SetLineWidth(2)
                 nomHist.Rebin(5)
                 nomHist.SetMaximum(nomHist.GetMaximum()*10)
                 if downHist:
                     downHist.SetLineColor(ROOT.kRed)
+                    downHist.SetLineWidth(2)
                     downHist.Rebin(5)
                 legMJ.append(ROOT.TLegend(0.5,0.7,0.75,0.85))
                 legMJ[ci].SetBorderSize(0)
                 legMJ[ci].SetFillStyle(0)
                 legMJ[ci].SetTextSize(0.04)
                 legMJ[ci].AddEntry(nomHist,'nominal','f')
-                legMJ[ci].AddEntry(upHist,systList[j]+' +1 #sigma','f')
+                legMJ[ci].AddEntry(upHist,systDict[systList[j]]+' +1 #sigma','f')
                 if downHist:
-                    legMJ[ci].AddEntry(downHist,systList[j]+' -1 #sigma','f')
+                    legMJ[ci].AddEntry(downHist,systDict[systList[j]]+' -1 #sigma','f')
                 nomHist.Draw('hist')
                 nomHist.GetYaxis().SetTitleOffset(1.5)
                 nomHist.GetYaxis().SetTitle('Events')
@@ -88,12 +102,14 @@ for i in range(len(dsidList)):
                     downHist.Draw('hist same')
                 legMJ[ci].Draw()
                 ROOT.ATLASLabel(0.47,0.88,'Simulation Internal')
-                lumiLatex.DrawLatexNDC(0.63,0.6,lumiString)
-                lumiLatex.DrawLatexNDC(0.7,0.5,srNames[k])
+                lumiLatex.DrawLatexNDC(0.675,0.6,lumiString)
+                lumiLatex.DrawLatexNDC(0.75,0.5,srNames[k])
                 mG = str(pointDict[int(dsidList[i])][0])
                 mX = str(pointDict[int(dsidList[i])][1])
-                massString='#splitline{m_{#tilde{g}} = '+mG+'}{m_{#tilde{#chi}} = '+mX+'}'
-                lumiLatex.DrawLatexNDC(0.2,0.75,massString)
+                massString='#splitline{RPV10}{#splitline{m_{#tilde{g}} = '+mG+'}{m_{#tilde{#chi}} = '+mX+'}}'                
+                if mX == '0':
+                    massString='#splitline{RPV6}{m_{#tilde{g}} = '+mG+'}'
+                lumiLatex.DrawLatexNDC(0.2,0.85,massString)
                 canMJ[ci].cd()
                 pad2.append(ROOT.TPad('pad2_'+str(i),'pad2_'+str(i),0,0.05,1,0.3))
                 pad2[ci].SetTopMargin(0)
@@ -104,8 +120,9 @@ for i in range(len(dsidList)):
                 
                 ratHistUp = upHist.Clone('ratioUp')
                 ratHistUp.SetMarkerColor(ROOT.kBlue)
+                ratHistUp.SetFillColor(ROOT.kBlue-10)
                 ratHistUp.SetMarkerStyle(21)
-                ratHistUp.GetYaxis().SetTitle('syst/nom')
+                ratHistUp.GetYaxis().SetTitle('(syst-nom)/nom')
                 ratHistUp.GetYaxis().SetNdivisions(505)
                 ratHistUp.GetYaxis().SetTitleSize(20)
                 ratHistUp.GetYaxis().SetTitleFont(43)
@@ -121,21 +138,23 @@ for i in range(len(dsidList)):
                 for bin in range(1,ratHistUp.GetNbinsX()):
                     endInt = upHist.GetNbinsX()+1
                     if nomHist.Integral(bin,endInt)!=0:
-                        ratHistUp.SetBinContent(bin,upHist.Integral(bin,endInt)/nomHist.Integral(bin,endInt))
+                        ratHistUp.SetBinContent(bin,upHist.Integral(bin,endInt)/nomHist.Integral(bin,endInt)-1)
                     else:
-                        ratHistUp.SetBinContent(bin,1)
-                ratHistUp.SetMaximum(1.5)
-                ratHistUp.SetMinimum(0.5)
+                        ratHistUp.SetBinContent(bin,0)
+                ratHistUp.SetMaximum(0.5)
+                ratHistUp.SetMinimum(-0.5)
                 ratHistUp.Draw('hist')
                 if downHist:
                     ratHistDown = downHist.Clone('ratioDown')
+                    ratHistDown.SetFillColorAlpha(ROOT.kRed-10,1.0)
                     for bin in range(1,ratHistDown.GetNbinsX()):
                         endInt = downHist.GetNbinsX()+1
                         if nomHist.Integral(bin,endInt) != 0:
-                            ratHistDown.SetBinContent(bin,downHist.Integral(bin,endInt)/nomHist.Integral(bin,endInt))
+                            ratHistDown.SetBinContent(bin,downHist.Integral(bin,endInt)/nomHist.Integral(bin,endInt)-1)
                         else:
-                            ratHistDown.SetBinContent(bin,1)
+                            ratHistDown.SetBinContent(bin,0)
                         ratHistDown.Draw('hist same')
+                        ratHistDown.Draw('axis same')
                 subprocess.call('mkdir -p /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/'+str(dsidList[i]),shell=True)
                 subprocess.call('chmod a+rx /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/'+str(dsidList[i]),shell=True)
                 outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/'+str(dsidList[i])+'/'
