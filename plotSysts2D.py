@@ -5,7 +5,53 @@ ROOT.gROOT.LoadMacro('/global/homes/b/btamadio/atlasstyle/AtlasStyle.C')
 ROOT.gROOT.LoadMacro('/global/homes/b/btamadio/atlasstyle/AtlasLabels.C')
 ROOT.SetAtlasStyle()
 
-#ROOT.gROOT.SetBatch(True)
+ROOT.gROOT.SetBatch(True)
+
+
+def drawHists(upHist,downHist,i,j,k):
+    ROOT.gStyle.SetPaintTextFormat('+1.1f')
+    upHist.Draw('TEXT')
+    upHist.GetXaxis().SetTickLength(0)
+    upHist.GetXaxis().SetTitle('m_{#tilde{g}} [TeV]')
+    upHist.GetYaxis().SetTitle('m_{#tilde{#chi}} [GeV]')
+    upHist.GetYaxis().SetTickLength(0)
+    upHist.GetYaxis().SetLabelOffset(99)
+    upHist.GetXaxis().SetLabelOffset(99)
+    upHist.SetMarkerSize(1.5)
+    t=ROOT.TText()
+    t.SetTextAngle(0)
+    t.SetTextSize(0.05)
+    t.SetTextAlign(33)
+
+    gridLine = ROOT.TLine()
+    gridLine.SetLineStyle(2)
+    gridLine.SetLineColor(ROOT.kGray)
+
+    for xi in range(650,1950,100):
+        gridLine.DrawLine(xi,-200,xi,1800)
+
+        
+    for yi in range(-50,1850,200):
+        gridLine.DrawLine(550,yi,1950,yi)
+
+    for xLab in range(700,2000,100):
+        t.DrawText(xLab+50,-215,str(xLab/1000.))
+    for yLab in range(50,1700,200):
+        t.DrawText(535,(yLab+50),str(yLab))
+
+    if downHist:
+        downHist.SetMarkerSize(1.5)
+        downHist.Draw('TEXT SAME')
+
+    ROOT.ATLASLabel(0.2,0.88,'Simulation Internal')
+    lat = ROOT.TLatex()
+    if k!=-1:
+        lat.DrawLatexNDC(0.2,0.8,systDict[systList[k]])
+    else:
+        lat.DrawLatexNDC(0.2,0.8,'JMS Total')
+    lat.DrawLatexNDC(0.2,0.72,srNames[i])
+    lat.DrawLatexNDC(0.2,0.65,mjCutNames[j])
+
 parser = argparse.ArgumentParser(add_help=False, description='Plot Systs')
 parser.add_argument('input')
 args = parser.parse_args()
@@ -57,14 +103,18 @@ mjCutLabs = ['MJ_600_13000','MJ_650_13000','MJ_700_13000','MJ_750_13000','MJ_800
 srBin = 1
 can = []
 canTot = []
-upHist =0
-downHist=0
+jmsUpList = []
+jmsDownList = []
+
 for i in range(len(srNames)):
     for j in range(len(mjCutNames)):
-        jmsUpList = []
-        jmsDownList = []
+        if i==i and j==j:
+            jmsUpList.append(ROOT.TH2D('hTotUp_'+srLabs[i]+'_'+mjCutLabs[j],'systematics',14,550,1950,10,-200,1800))
+            jmsDownList.append(ROOT.TH2D('hTotDown_'+srLabs[i]+'_'+mjCutLabs[j],'systematics',14,550,1950,10,-300,1700))
+            jmsUpList[-1].SetDirectory(0)
+            jmsDownList[-1].SetDirectory(0)
         for k in range(len(systList)):
-            if i==2 and j==4 and k==k:
+            if i==i and j==j and k==k:
                 nomFile = ROOT.TFile.Open(filePath+'/nominal.root')
                 upFile = ROOT.TFile.Open(filePath+'/'+systList[k]+'__1up.root')
                 downFile=0
@@ -72,8 +122,8 @@ for i in range(len(srNames)):
                     downFile = ROOT.TFile.Open(filePath+'/'+systList[k]+'__1down.root')
                 can.append(ROOT.TCanvas('c_'+str(len(can)),'c_'+str(len(can)),800,600))
                 can[-1].cd()
-                upHist = ROOT.TH2D('h_'+srLabs[i]+'_'+mjCutLabs[j]+'_'+systList[k]+'__1up','systematics',14,550,1950,10,-200,1800)
-                downHist = ROOT.TH2D('h_'+srLabs[i]+'_'+mjCutLabs[j]+'_'+systList[k]+'__1down','systematics',14,550,1950,10,-300,1700)
+                upHist=ROOT.TH2D('h_'+srLabs[i]+'_'+mjCutLabs[j]+'_'+systList[k]+'__1up','systematics',14,550,1950,10,-200,1800)
+                downHist=ROOT.TH2D('h_'+srLabs[i]+'_'+mjCutLabs[j]+'_'+systList[k]+'__1down','systematics',14,550,1950,10,-300,1700)
                 for m in range(len(dsidList)):
                     nomSRyield = nomFile.Get('h_SRyield_'+str(dsidList[m]))
                     upSRyield = upFile.Get('h_SRyield_'+str(dsidList[m]))
@@ -91,51 +141,14 @@ for i in range(len(srNames)):
                         if downPercent==0:
                             downPercent=-1E-8
                         downHist.Fill(mG,mX,downPercent)
-                if systList[k] in jmsSystList:
-                    jmsUpList.append(upHist)
-                    jmsDownList.append(downHist)
-                    print jmsUpList
-                    print jmsDownList
-
-                ROOT.gStyle.SetPaintTextFormat('+1.1f')
-                upHist.Draw('TEXT')
-                upHist.GetXaxis().SetTickLength(0)
-                upHist.GetXaxis().SetTitle('m_{#tilde{g}} [TeV]')
-                upHist.GetYaxis().SetTitle('m_{#tilde{#chi}} [GeV]')
-                upHist.GetYaxis().SetTickLength(0)
-                upHist.GetYaxis().SetLabelOffset(99)
-                upHist.GetXaxis().SetLabelOffset(99)
-                upHist.SetMarkerSize(1.5)
-                t=ROOT.TText()
-                t.SetTextAngle(0)
-                t.SetTextSize(0.05)
-                t.SetTextAlign(33)
-
-                gridLine = ROOT.TLine()
-                gridLine.SetLineStyle(2)
-                gridLine.SetLineColor(ROOT.kGray)
-                #vertical grid lines
-                for xi in range(650,1950,100):
-                    gridLine.DrawLine(xi,-200,xi,1800)
-
-                #horizontal grid lines
-                for yi in range(-50,1850,200):
-                    gridLine.DrawLine(550,yi,1950,yi)
-
-                for xLab in range(700,2000,100):
-                    t.DrawText(xLab+50,-215,str(xLab/1000.))
-                for yLab in range(50,1700,200):
-                    t.DrawText(535,(yLab+50),str(yLab))
-
+                    if systList[k] in jmsSystList:
+                        jmsUpList[-1].Fill(mG,mX,upPercent*upPercent)
+                        if downFile:
+                            jmsDownList[-1].Fill(mG,mX,downPercent*downPercent)
                 if downFile:
-                    downHist.SetMarkerSize(1.5)
-                    downHist.Draw('TEXT SAME')
-
-                ROOT.ATLASLabel(0.2,0.88,'Simulation Internal')
-                lat = ROOT.TLatex()
-                lat.DrawLatexNDC(0.2,0.8,systDict[systList[k]])
-                lat.DrawLatexNDC(0.2,0.72,srNames[i])
-                lat.DrawLatexNDC(0.2,0.65,mjCutNames[j])
+                    drawHists(upHist,downHist,i,j,k)
+                else:
+                    drawHists(upHist,0,i,j,k)
 
                 outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV10/'
                 outFileName+='uncert_RPV10_'+srLabs[i]+'_'+mjCutLabs[j]+'_'+systList[k]
@@ -143,20 +156,24 @@ for i in range(len(srNames)):
                 can[-1].Print(outFileName+'.png')
                 can[-1].Print(outFileName+'.C')
                 subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV10/*',shell=True)
-        # canTot.append(ROOT.TCanvas('cTot_'+str(srBin),'cTot_'+str(srBin),800,600))
-        # canTot[-1].cd()
-        # jmsUpHist = ROOT.TH2D('hTot_'+srLabs[i]+'_'+mjCutLabs[j]+'_'+systList[k]+'__1up','total JMS',14,550,1950,10,-200,1800)
-        # jmsDownHist = ROOT.TH2D('hTot_'+srLabs[i]+'_'+mjCutLabs[j]+'_'+systList[k]+'__1down','total JMS',14,550,1950,10,-300,1700)
-        # for mG in range(700,2000,100):
-        #     for mX in range(50,1850,200):
-        #         upTot = 0
-        #         downTot = 0
-        #         for hUp in jmsUpList:
-        #             upTot += hUp.GetBinContent(hUp.FindBin(mG,mX)) * hUp.GetBinContent(hUp.FindBin(mG,mX))
-        #         for hdown in jmsDownList:
-        #             downTot += hDown.GetBinContent(hDown.FindBin(mG,mX)) * hDown.GetBinContent(hDown.FindBin(mG,mX))
-        #         jmsUpHist.Fill(mG,mX,math.sqrt(upTot))
-        #         jmsDownHist.Fill(mG,mX,math.sqrt(downTot))
-        # jmsUpHist.Draw('TEXT')
-        # jmsDownHist.Draw('TEXT SAME')
+        if i==i and j==j:
+            canTot.append(ROOT.TCanvas('cTot_'+str(srBin),'cTot_'+str(srBin),800,600))
+            canTot[-1].cd()
+            jmsUpHist = jmsUpList[-1]
+            jmsDownHist = jmsDownList[-1]
+            for xBin in range(1,jmsUpHist.GetNbinsX()+1):
+                for yBin in range(1,jmsUpHist.GetNbinsY()+1):
+                    binCup = jmsUpHist.GetBinContent(xBin,yBin)
+                    binCup = math.sqrt(binCup)
+                    jmsUpHist.SetBinContent(xBin,yBin,binCup)
+                    binCdown = jmsDownHist.GetBinContent(xBin,yBin)
+                    binCdown = math.sqrt(binCdown)
+                    jmsDownHist.SetBinContent(xBin,yBin,-1*binCdown)
+            drawHists(jmsUpHist,jmsDownHist,i,j,-1)
+            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV10/'
+            outFileName+='uncert_RPV10_'+srLabs[i]+'_'+mjCutLabs[j]+'_JMSTotal'
+            canTot[-1].Print(outFileName+'.pdf')
+            canTot[-1].Print(outFileName+'.png')
+            canTot[-1].Print(outFileName+'.C')
         srBin+=1
+
