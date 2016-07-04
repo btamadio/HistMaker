@@ -25,6 +25,9 @@ void HistMaker::Loop(){
      suffix="_"+to_string(mcChannelNumber);
    }
    Long64_t nentries = fChain->GetEntriesFast();
+   TH1F *h_initEvents = new TH1F(("h_initEvents"+suffix).c_str(),"initial nEvents",1,0.5,1.5);
+   h_initEvents->Fill(1,m_denom);
+   
    TH1F *h_cutflow = new TH1F(("h_cutflow"+suffix).c_str(),"cutflow histogram",10,0.5,10.5);
    //For data: 2= every event looped over, 3= events that pass GRL
    //For MC: 1 = 2 = xsec*luminosity, 3= all events looped over
@@ -42,6 +45,7 @@ void HistMaker::Loop(){
    TH1F *h_CRyield = new TH1F(("h_CRyield"+suffix).c_str(),"CR yields",2,0.5,2.5);
    h_CRyield->GetXaxis()->SetBinLabel(1,"= 3 jet, b-veto");
    h_CRyield->GetXaxis()->SetBinLabel(2,"= 3 jet, b-tag, |#Delta #eta| > 1.4");
+
 
    TH1F* h_SRyield = new TH1F(("h_SRyield"+suffix).c_str(),"signal region yield",20,0.5,20.5);
    h_SRyield->GetXaxis()->SetBinLabel(1,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
@@ -67,6 +71,32 @@ void HistMaker::Loop(){
    h_SRyield->GetXaxis()->SetBinLabel(18,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
    h_SRyield->GetXaxis()->SetBinLabel(19,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
    h_SRyield->GetXaxis()->SetBinLabel(20,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
+
+
+   TH1F* h_SRyield_unweighted = new TH1F(("h_SRyield_unweighted"+suffix).c_str(),"signal region yield",20,0.5,20.5);
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(1,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(2,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(3,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.7 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(4,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.75 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(5,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.8 TeV");
+
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(6,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.6 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(7,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.65 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(8,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(9,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(10,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
+
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(11,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(12,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(13,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.7 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(14,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.75 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(15,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.8 TeV");
+
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(16,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.6 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(17,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.65 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(18,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(19,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(20,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
 
    TH1F *h_VRyield = new TH1F(("h_VRyield"+suffix).c_str(),"VR yields",20,0.5,20.5);
    h_VRyield->GetXaxis()->SetBinLabel(1,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
@@ -135,6 +165,8 @@ void HistMaker::Loop(){
    TH1F* h_fatjet_tau21_wta = new TH1F(("h_fatjet_tau21_wta"+suffix).c_str(),"fat jet tau21 wta",100,0,1);
    TH1F* h_fatjet_D2 = new TH1F(("h_fatjet_D2"+suffix).c_str(),"fat jet D2",20,0,200);
    TH1F* h_fatjet_C2 = new TH1F(("h_fatjet_C2"+suffix).c_str(),"fat jet C2",20,0,0.6);
+   
+
 
    if (m_isMC){
      fChain->GetEntry(0);
@@ -269,45 +301,76 @@ void HistMaker::Loop(){
       if (nFatJet >= 4){
         if (nBTag >= 1){
       	  if (mj > 600){
-      	    if (dy < 1.4){ h_SRyield->Fill(sr+1,bw); }
+      	    if (dy < 1.4){ 
+	      h_SRyield->Fill(sr+1,bw); 
+	      h_SRyield_unweighted->Fill(sr+1);
+	    }
+
 	    else{ h_VRyield->Fill(sr+1,bw); }
       	  }
       	  if (mj > 650){
-	    if (dy < 1.4) { h_SRyield->Fill(sr+2,bw); }
+	    if (dy < 1.4) { 
+	      h_SRyield->Fill(sr+2,bw); 
+	      h_SRyield_unweighted->Fill(sr+2);
+	    }
 	    else{ h_VRyield->Fill(sr+2,bw); }
       	  }
       	  if (mj > 700){
-      	    if (dy < 1.4){ h_SRyield->Fill(sr+3,bw); }
+      	    if (dy < 1.4){ 
+	      h_SRyield->Fill(sr+3,bw); 
+	      h_SRyield_unweighted->Fill(sr+3);
+	    }
 	    else{ h_VRyield->Fill(sr+3,bw); }
       	  }
       	  if (mj > 750){
-	    if (dy < 1.4) { h_SRyield->Fill(sr+4,bw); }
+	    if (dy < 1.4) { 
+	      h_SRyield->Fill(sr+4,bw); 
+	      h_SRyield_unweighted->Fill(sr+4);
+	    }
 	    else{ h_VRyield->Fill(sr+4,bw); }
       	  }
       	  if (mj > 800){
-      	    if (dy < 1.4) { h_SRyield->Fill(sr+5,bw); }
+      	    if (dy < 1.4) { 
+	      h_SRyield->Fill(sr+5,bw); 
+	      h_SRyield_unweighted->Fill(sr+5);
+	    }
 	    else{ h_VRyield->Fill(sr+5,bw); }
       	  }
       	}
       	//b-inclusive SRs
       	if (mj > 600){
-      	  if (dy < 1.4){ h_SRyield->Fill(sr+6,w); }
+      	  if (dy < 1.4){ 
+	    h_SRyield->Fill(sr+6,w); 
+	    h_SRyield_unweighted->Fill(sr+6);
+	  }
 	  else{ h_VRyield->Fill(sr+6,w); }
       	}
       	if (mj > 650){
-      	  if (dy < 1.4) { h_SRyield->Fill(sr+7,w); }
+      	  if (dy < 1.4) { 
+	    h_SRyield->Fill(sr+7,w);
+	    h_SRyield_unweighted->Fill(sr+7);
+	  }
 	  else{ h_VRyield->Fill(sr+7,w); }
       	}
       	if (mj > 700){
-      	  if (dy < 1.4){ h_SRyield->Fill(sr+8,w); }
+      	  if (dy < 1.4){ 
+	    h_SRyield->Fill(sr+8,w); 
+	    h_SRyield_unweighted->Fill(sr+8);
+	  }
 	  else{ h_VRyield->Fill(sr+8,w); }
       	}
       	if (mj > 750){
-      	  if (dy < 1.4) { h_SRyield->Fill(sr+9,w); }
+      	  if (dy < 1.4) { 
+	    h_SRyield->Fill(sr+9,w); 
+	    h_SRyield_unweighted->Fill(sr+9);
+	  }
 	  else{ h_VRyield->Fill(sr+9,w); }
       	}
       	if (mj > 800){
-      	  if (dy < 1.4) { h_SRyield->Fill(sr+10,w); }
+      	  if (dy < 1.4) { 
+	    h_SRyield->Fill(sr+10,w); 
+	    h_SRyield_unweighted->Fill(sr+10);
+	  }
 	  else{ h_VRyield->Fill(sr+10,w); }
       	}
       }
@@ -315,45 +378,75 @@ void HistMaker::Loop(){
       if (nFatJet >= 5){
         if (nBTag >= 1){
       	  if (mj > 600){
-      	    if (dy < 1.4){ h_SRyield->Fill(sr+1,bw); }
+      	    if (dy < 1.4){ 
+	      h_SRyield->Fill(sr+1,bw); 
+	      h_SRyield_unweighted->Fill(sr+1);
+	    }
 	    else{ h_VRyield->Fill(sr+1,bw); }
       	  }
       	  if (mj > 650){
-      	    if (dy < 1.4) { h_SRyield->Fill(sr+2,bw); }
+      	    if (dy < 1.4) { 
+	      h_SRyield->Fill(sr+2,bw); 
+	      h_SRyield_unweighted->Fill(sr+2);
+	    }
 	    else{ h_VRyield->Fill(sr+2,bw); }
       	  }
       	  if (mj > 700){
-      	    if (dy < 1.4){ h_SRyield->Fill(sr+3,bw); }
+      	    if (dy < 1.4){ 
+	      h_SRyield->Fill(sr+3,bw); 
+	      h_SRyield_unweighted->Fill(sr+3);
+	    }
 	    else{ h_VRyield->Fill(sr+3,bw); }
       	  }
       	  if (mj > 750){
-      	    if (dy < 1.4) { h_SRyield->Fill(sr+4,bw); }
+      	    if (dy < 1.4) { 
+	      h_SRyield->Fill(sr+4,bw); 
+	      h_SRyield_unweighted->Fill(sr+4);
+	    }
 	    else{ h_VRyield->Fill(sr+4,bw); }
       	  }
       	  if (mj > 800){
-      	    if (dy < 1.4) { h_SRyield->Fill(sr+5,bw); }
+      	    if (dy < 1.4) { 
+	      h_SRyield->Fill(sr+5,bw); 
+	      h_SRyield_unweighted->Fill(sr+5);
+	    }
 	    else{ h_VRyield->Fill(sr+5,bw); }
       	  }
       	}
       	//b-inclusive SRs
       	if (mj > 600){
-      	  if (dy < 1.4){ h_SRyield->Fill(sr+6,w); }
+      	  if (dy < 1.4){ 
+	    h_SRyield->Fill(sr+6,w); 
+	    h_SRyield_unweighted->Fill(sr+6);
+	  }
 	  else{ h_VRyield->Fill(sr+6,w); }
       	}
       	if (mj > 650){
-      	  if (dy < 1.4) { h_SRyield->Fill(sr+7,w); }
+      	  if (dy < 1.4) { 
+	    h_SRyield->Fill(sr+7,w); 
+	    h_SRyield_unweighted->Fill(sr+7);
+	  }
 	  else{ h_VRyield->Fill(sr+7,w); }
       	}
       	if (mj > 700){
-      	  if (dy < 1.4){ h_SRyield->Fill(sr+8,w); }
+      	  if (dy < 1.4){ 
+	    h_SRyield->Fill(sr+8,w); 
+	    h_SRyield_unweighted->Fill(sr+8);
+	  }
 	  else{ h_VRyield->Fill(sr+8,w); }
       	}
       	if (mj > 750){
-      	  if (dy < 1.4) { h_SRyield->Fill(sr+9,w); }
+      	  if (dy < 1.4) { 
+	    h_SRyield->Fill(sr+9,w); 
+	    h_SRyield_unweighted->Fill(sr+9);
+	  }
 	  else{ h_VRyield->Fill(sr+9,w); }
       	}
       	if (mj > 800){
-      	  if (dy < 1.4) { h_SRyield->Fill(sr+10,w); }
+      	  if (dy < 1.4) { 
+	    h_SRyield->Fill(sr+10,w); 
+	    h_SRyield_unweighted->Fill(sr+10);
+	  }
 	  else{ h_VRyield->Fill(sr+10,w); }
       	}
       }

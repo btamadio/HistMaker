@@ -1,15 +1,54 @@
 #!/usr/bin/env python
-import argparse,ROOT,os,glob,sys,subprocess
+import argparse,ROOT,os,glob,sys,subprocess,math
 from pointDict import pointDict
 ROOT.gROOT.LoadMacro('/global/homes/b/btamadio/atlasstyle/AtlasStyle.C')
 ROOT.gROOT.LoadMacro('/global/homes/b/btamadio/atlasstyle/AtlasLabels.C')
 ROOT.SetAtlasStyle()
 
 ROOT.gROOT.SetBatch(True)
+
 parser = argparse.ArgumentParser(add_help=False, description='Plot Systs')
 parser.add_argument('input')
 args = parser.parse_args()
 filePath = args.input.strip('/')
+
+
+def drawHists(upHist,downHist,i,j,k):
+    upHist.Draw('HIST')
+    upHist.GetXaxis().SetTitle('m_{#tilde{g}} [TeV]')
+    upHist.GetYaxis().SetTitle('% uncertainty')
+    upHist.SetFillColor(ROOT.kBlue-10)
+    upHist.SetLineColor(ROOT.kBlue)
+    if upHist.GetMaximum() < 15:
+        upHist.SetMaximum(15)
+        upHist.SetMinimum(-15)
+    elif upHist.GetMaximum() < 20:
+        upHist.SetMaximum(20)
+        upHist.SetMinimum(-20)
+    else:
+        mx = upHist.GetMaximum()
+        upHist.SetMaximum(1.1*mx)
+        upHist.SetMinimum(-1.1*mx)
+                
+    if downHist:
+        downHist.SetMarkerSize(1.5)
+        downHist.Draw('HIST SAME')
+        downHist.Draw('SAME AXIS')
+        downHist.SetFillColorAlpha(ROOT.kRed-10,1.0)
+        downHist.SetLineColor(ROOT.kRed)
+        
+    gridLine = ROOT.TLine()
+    gridLine.SetLineColor(ROOT.kBlack)
+    gridLine.DrawLine(0.850,0,1.850,0)
+
+    ROOT.ATLASLabel(0.525,0.88,'Simulation Internal')
+    lat = ROOT.TLatex()
+    if k!=-1:
+        lat.DrawLatexNDC(0.525,0.8,systDict[systList[k]])
+    else:
+        lat.DrawLatexNDC(0.525,0.8,'JMS Total')        
+    lat.DrawLatexNDC(0.7,0.72,srNames[i])
+    lat.DrawLatexNDC(0.7,0.65,mjCutNames[j])
 
 #get list of systematics from file names
 systList = []
@@ -30,6 +69,13 @@ systDict={'JET_EtaIntercalibration_NonClosure':'Small-R #eta-intercalibration',
           'JET_Rtrk_TotalStat_All':'R_{trk} Statistics',
           'JET_Rtrk_Tracking_All':'R_{trk} Tracking',
           'JMR_Smear':'Large-R JMR'}
+
+#list of uncertainties to include in total JMS
+jmsSystList = ['JET_Rtrk_Baseline_All',
+               'JET_Rtrk_Modelling_All',
+               'JET_Rtrk_TotalStat_All',
+               'JET_Rtrk_Tracking_All']
+
 #get list of signal points from nominal file
 nomFile = ROOT.TFile.Open(filePath+'/nominal.root')
 for key in nomFile.GetListOfKeys():
@@ -50,8 +96,17 @@ mjCutLabs = ['MJ_600_13000','MJ_650_13000','MJ_700_13000','MJ_750_13000','MJ_800
 
 srBin = 1
 can = []
+canTot = []
+jmsUpList = []
+jmsDownList = []
+
 for i in range(len(srNames)):
     for j in range(len(mjCutNames)):
+        if i==i and j==j:
+            jmsUpList.append(ROOT.TH1D('hTot_'+srLabs[i]+'_'+mjCutLabs[j]+'__1up','JMS up',10,0.850,1.850))
+            jmsDownList.append(ROOT.TH1D('hTot_'+srLabs[i]+'_'+mjCutLabs[j]+'__1down','JMS down',10,0.850,1.850))
+            jmsUpList[-1].SetDirectory(0)
+            jmsDownList[-1].SetDirectory(0)
         for k in range(len(systList)):
             if i==i and j==j and k==k:
                 nomFile = ROOT.TFile.Open(filePath+'/nominal.root')
@@ -61,8 +116,8 @@ for i in range(len(srNames)):
                     downFile = ROOT.TFile.Open(filePath+'/'+systList[k]+'__1down.root')
                 can.append(ROOT.TCanvas('c_'+str(len(can)),'c_'+str(len(can)),800,600))
                 can[-1].cd()
-                upHist = ROOT.TH1D('h_'+srLabs[i]+'_'+mjCutLabs[j]+'__1up','systematics',10,0.850,1.850)
-                downHist = ROOT.TH1D('h_'+srLabs[i]+'_'+mjCutLabs[j]+'__1down','systematics',10,0.850,1.850)
+                upHist = ROOT.TH1D('h_'+srLabs[i]+'_'+mjCutLabs[j]+'_'+systList[k]+'__1up','systematics',10,0.850,1.850)
+                downHist = ROOT.TH1D('h_'+srLabs[i]+'_'+mjCutLabs[j]+'_'+systList[k]+'__1down','systematics',10,0.850,1.850)
                 for m in range(len(dsidList)):
                     nomSRyield = nomFile.Get('h_SRyield_'+str(dsidList[m]))
                     upSRyield = upFile.Get('h_SRyield_'+str(dsidList[m]))
@@ -79,34 +134,61 @@ for i in range(len(srNames)):
                         if downPercent==0:
                             downPercent=-1E-8
                         downHist.Fill(mG/1000.,downPercent)
-                upHist.Draw('HIST')
-                upHist.GetXaxis().SetTitle('m_{#tilde{g}} [TeV]')
-                upHist.GetYaxis().SetTitle('% uncertainty')
-                upHist.SetFillColor(ROOT.kBlue-10)
-                upHist.SetLineColor(ROOT.kBlue)
-                upHist.SetMaximum(15)
-                upHist.SetMinimum(-15)
-                
+                    if systList[k] in jmsSystList:
+                        jmsUpList[-1].Fill(mG/1000.,upPercent*upPercent)
+                        if downFile:
+                            jmsDownList[-1].Fill(mG/1000.,downPercent*downPercent)
                 if downFile:
-                    downHist.SetMarkerSize(1.5)
-                    downHist.Draw('HIST SAME')
-                    downHist.Draw('SAME AXIS')
-                    downHist.SetFillColorAlpha(ROOT.kRed-10,1.0)
-                    downHist.SetLineColor(ROOT.kRed)
+                    drawHists(upHist,downHist,i,j,k)
+                else:
+                    drawHists(upHist,0,i,j,k)
+                # upHist.Draw('HIST')
+                # upHist.GetXaxis().SetTitle('m_{#tilde{g}} [TeV]')
+                # upHist.GetYaxis().SetTitle('% uncertainty')
+                # upHist.SetFillColor(ROOT.kBlue-10)
+                # upHist.SetLineColor(ROOT.kBlue)
+                # upHist.SetMaximum(15)
+                # upHist.SetMinimum(-15)
+                
+                # if downFile:
+                #     downHist.SetMarkerSize(1.5)
+                #     downHist.Draw('HIST SAME')
+                #     downHist.Draw('SAME AXIS')
+                #     downHist.SetFillColorAlpha(ROOT.kRed-10,1.0)
+                #     downHist.SetLineColor(ROOT.kRed)
 
-                gridLine = ROOT.TLine()
-                gridLine.SetLineColor(ROOT.kBlack)
-                gridLine.DrawLine(0.850,0,1.850,0)
+                # gridLine = ROOT.TLine()
+                # gridLine.SetLineColor(ROOT.kBlack)
+                # gridLine.DrawLine(0.850,0,1.850,0)
 
-                ROOT.ATLASLabel(0.525,0.88,'Simulation Internal')
-                lat = ROOT.TLatex()
-                lat.DrawLatexNDC(0.525,0.8,systDict[systList[k]])
-                lat.DrawLatexNDC(0.7,0.72,srNames[i])
-                lat.DrawLatexNDC(0.7,0.65,mjCutNames[j])
+                # ROOT.ATLASLabel(0.525,0.88,'Simulation Internal')
+                # lat = ROOT.TLatex()
+                # lat.DrawLatexNDC(0.525,0.8,systDict[systList[k]])
+                # lat.DrawLatexNDC(0.7,0.72,srNames[i])
+                # lat.DrawLatexNDC(0.7,0.65,mjCutNames[j])
                 outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV6/'
                 outFileName+='uncert_RPV6_'+srLabs[i]+'_'+mjCutLabs[j]+'_'+systList[k]
                 can[-1].Print(outFileName+'.pdf')
                 can[-1].Print(outFileName+'.png')
                 can[-1].Print(outFileName+'.C')
                 subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV6/*',shell=True)
+
+        if i==i and j==j:
+            canTot.append(ROOT.TCanvas('cTot_'+str(srBin),'cTot_'+str(srBin),800,600))
+            canTot[-1].cd()
+            jmsUpHist = jmsUpList[-1]
+            jmsDownHist = jmsDownList[-1]
+            for xBin in range(1,jmsUpHist.GetNbinsX()+1):
+                binCup = jmsUpHist.GetBinContent(xBin)
+                binCup = math.sqrt(binCup)
+                jmsUpHist.SetBinContent(xBin,binCup)
+                binCdown = jmsDownHist.GetBinContent(xBin)
+                binCdown = math.sqrt(binCdown)
+                jmsDownHist.SetBinContent(xBin,-1*binCdown)
+            drawHists(jmsUpHist,jmsDownHist,i,j,-1)
+            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV6/'
+            outFileName+='uncert_RPV6_'+srLabs[i]+'_'+mjCutLabs[j]+'_JMSTotal'
+            canTot[-1].Print(outFileName+'.pdf')
+            canTot[-1].Print(outFileName+'.png')
+            canTot[-1].Print(outFileName+'.C')
         srBin+=1
