@@ -65,7 +65,7 @@ def drawHists(upHist,downHist,i,j,k):
     lat.DrawLatexNDC(0.2,0.72,srNames[i])
     lat.DrawLatexNDC(0.2,0.65,mjCutNames[j])
 
-parser = argparse.ArgumentParser(add_help=False, description='Plot Systs')
+    parser = argparse.ArgumentParser(add_help=False, description='Plot Systs')
 parser.add_argument('input')
 args = parser.parse_args()
 filePath = args.input.strip('/')

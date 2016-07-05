@@ -56,9 +56,8 @@ srLabs = ['m4_b9','m5_b9','m4_b1','m5_b1']
 
 ci=0
 
-
 for i in range(len(dsidList)):
-   if i==i:
+    if i==i:
         nomFile = ROOT.TFile.Open(filePath+'/nominal.root')
         for j in range(25):
             for m in range(4,6):
