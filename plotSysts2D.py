@@ -7,7 +7,6 @@ ROOT.SetAtlasStyle()
 
 ROOT.gROOT.SetBatch(True)
 
-
 def drawHists(upHist,downHist,i,j,k):
     ROOT.gStyle.SetPaintTextFormat('+1.1f')
     upHist.Draw('TEXT')
@@ -26,29 +25,43 @@ def drawHists(upHist,downHist,i,j,k):
     gridLine = ROOT.TLine()
     gridLine.SetLineStyle(2)
     gridLine.SetLineColor(ROOT.kGray)
-
+    #vertical lines
     for xi in range(650,1950,100):
-        gridLine.DrawLine(xi,-200,xi,1800)
-
-        
+        if k >= -1:
+            gridLine.DrawLine(xi,-200,xi,1800)
+        elif xi > 650:
+            gridLine.DrawLine(xi,-50,xi,1750)
     for yi in range(-50,1850,200):
-        gridLine.DrawLine(550,yi,1950,yi)
-
+        if k >= -1:
+            gridLine.DrawLine(550,yi,1950,yi)
+        elif  yi > -50 and yi < 1600:
+            gridLine.DrawLine(650,yi,1950,yi)
     for xLab in range(700,2000,100):
-        t.DrawText(xLab+50,-215,str(xLab/1000.))
+        if k >= -1:
+            t.DrawText(xLab+50,-215,str(xLab/1000.))
+        else:
+            t.DrawText(xLab+50,-65,str(xLab/1000.))
     for yLab in range(50,1700,200):
-        t.DrawText(535,(yLab+50),str(yLab))
-
+        if k >=-1:
+            t.DrawText(535,(yLab+50),str(yLab))
+        else:
+            t.DrawText(635,(yLab+50),str(yLab))
     if downHist:
         downHist.SetMarkerSize(1.5)
         downHist.Draw('TEXT SAME')
 
     ROOT.ATLASLabel(0.2,0.88,'Simulation Internal')
     lat = ROOT.TLatex()
-    if k!=-1:
+    if k>=0:
         lat.DrawLatexNDC(0.2,0.8,systDict[systList[k]])
-    else:
-        lat.DrawLatexNDC(0.2,0.8,'JMS Total')
+    elif k==-1:
+        lat.DrawLatexNDC(0.2,0.8,'AkT10 Total JMS Uncertainty (%)')
+    elif k==-2:
+        ROOT.gStyle.SetPaintTextFormat('1.1f')
+        lat.DrawLatexNDC(0.2,0.8,'MC Statistical Uncertainty (%)')
+    elif k==-3:
+        ROOT.gStyle.SetPaintTextFormat('1.1f')
+        lat.DrawLatexNDC(0.2,0.8,'Selection efficiency (%)')
     lat.DrawLatexNDC(0.2,0.72,srNames[i])
     lat.DrawLatexNDC(0.2,0.65,mjCutNames[j])
 
@@ -56,17 +69,17 @@ parser = argparse.ArgumentParser(add_help=False, description='Plot Systs')
 parser.add_argument('input')
 args = parser.parse_args()
 filePath = args.input.strip('/')
-systDict={'JET_EtaIntercalibration_NonClosure':'Small-R #eta-intercalibration',
-          'JET_GroupedNP_1':'Small-R NP 1',
-          'JET_GroupedNP_2':'Small-R NP 2',
-          'JET_GroupedNP_3':'Small-R NP 3',
-          'JET_JER_SINGLE_NP':'Small-R JER',
-          'JET_RelativeNonClosure_AFII':'Small-R AFII non-closure',
-          'JET_Rtrk_Baseline_All':'R_{trk} Baseline',
-          'JET_Rtrk_Modelling_All':'R_{trk} Modelling',
-          'JET_Rtrk_TotalStat_All':'R_{trk} Statistics',
-          'JET_Rtrk_Tracking_All':'R_{trk} Tracking',
-          'JMR_Smear':'Large-R JMR'}
+systDict={'JET_EtaIntercalibration_NonClosure':'AkT4 #eta-intercalib Uncert (%)',
+          'JET_GroupedNP_1':'AkT4 NP 1 Uncertainty (%)',
+          'JET_GroupedNP_2':'AkT4 NP 2 Uncertainty (%)',
+          'JET_GroupedNP_3':'AkT4 NP 3 Uncertainty (%)',
+          'JET_JER_SINGLE_NP':'AkT4 JER Uncertainty (%)',
+          'JET_RelativeNonClosure_AFII':'AkT4 AFII non-closure Uncertainty (%)',
+          'JET_Rtrk_Baseline_All':'AkT10 R_{trk} Baseline Uncertainty (%)',
+          'JET_Rtrk_Modelling_All':'AkT10 R_{trk} Modelling Uncertainty (%)',
+          'JET_Rtrk_TotalStat_All':'AkT10 R_{trk} Statistics Uncertainty (%)',
+          'JET_Rtrk_Tracking_All':'AkT10 R_{trk} Tracking Uncertainty (%)',
+          'JMR_Smear':'AkT10 JMR Uncertainty (%)'}
 
 jmsSystList = ['JET_Rtrk_Baseline_All',
                'JET_Rtrk_Modelling_All',
@@ -105,9 +118,49 @@ can = []
 canTot = []
 jmsUpList = []
 jmsDownList = []
-
+canMCStats=[]
+canEff=[]
 for i in range(len(srNames)):
     for j in range(len(mjCutNames)):
+        if i==i and j==j:
+            nomFile=ROOT.TFile.Open(filePath+'/nominal.root')
+            mcStatsHist=ROOT.TH2D('h_MCStats_'+srLabs[i]+'_'+mjCutLabs[j],'MC stats',13,650,1950,9,-50,1750)
+            effHist=ROOT.TH2D('h_eff_'+srLabs[i]+'_'+mjCutLabs[j],'selection efficiency',13,650,1950,9,-50,1750)
+            canMCStats.append(ROOT.TCanvas('cMC_'+str(len(canMCStats)),'cMC_'+str(len(canMCStats)),800,600))
+            canEff.append(ROOT.TCanvas('cEff_'+str(len(canEff)),'cEff_'+str(len(canEff)),800,600))
+            print srBin
+            for m in range(len(dsidList)):
+                hInit=nomFile.Get('h_initEvents_'+str(dsidList[m]))
+                hSRyield_uw=nomFile.Get('h_SRyield_unweighted_'+str(dsidList[m]))
+                hSRyield=nomFile.Get('h_SRyield_'+str(dsidList[m]))
+                hCutflow=nomFile.Get('h_cutflow_'+str(dsidList[m]))
+                mG = pointDict[int(dsidList[m])][0]
+                mX = pointDict[int(dsidList[m])][1]
+                np = hSRyield_uw[srBin]
+                n = hInit[1]
+                e = np/n
+                uncert = e*(1-e)/n
+                uncert = math.sqrt(uncert)
+                uncert /= e
+                eff = hSRyield[srBin]/hCutflow[2]
+                mcStatsHist.Fill(mG,mX,100*uncert)
+                effHist.Fill(mG,mX,100*eff)
+            canMCStats[-1].cd()
+            drawHists(mcStatsHist,0,i,j,-2)
+            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV10/'
+            outFileName+='uncert_RPV10_'+srLabs[i]+'_'+mjCutLabs[j]+'_MC_statistical'
+            canMCStats[-1].Print(outFileName+'.pdf')
+            canMCStats[-1].Print(outFileName+'.png')
+            canMCStats[-1].Print(outFileName+'.C')
+
+            canEff[-1].cd()
+            drawHists(effHist,0,i,j,-3)
+            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV10/'
+            outFileName+='selection_efficiency_RPV10_'+srLabs[i]+'_'+mjCutLabs[j]
+            canEff[-1].Print(outFileName+'.pdf')
+            canEff[-1].Print(outFileName+'.png')
+            canEff[-1].Print(outFileName+'.C')
+            subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV10/*',shell=True)
         if i==i and j==j:
             jmsUpList.append(ROOT.TH2D('hTotUp_'+srLabs[i]+'_'+mjCutLabs[j],'systematics',14,550,1950,10,-200,1800))
             jmsDownList.append(ROOT.TH2D('hTotDown_'+srLabs[i]+'_'+mjCutLabs[j],'systematics',14,550,1950,10,-300,1700))
