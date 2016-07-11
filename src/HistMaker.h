@@ -280,14 +280,14 @@ public :
    float m_denom = 1.0;
    float m_lumi = 5.8;
    bool m_isMC = false;
+   bool m_isCalibrated = true;
    TFile *m_outFile;
-   float m_htCut = 1000.0;
    float m_jetPtCut = 50.0;
    float m_fatJetPtCut = 200.0;
-   float m_jetEtaCut = 2.8;
+   float m_jetEtaCut = 2.5;
    float m_fatJetEtaCut = 2.0;
    float m_leadJetPtCut = 440.0;
-   float m_fatJetMpTCut = 0.8;
+   float m_fatJetMpTCut = 1.0;
    string m_GRLFileName = "/project/projectdirs/atlas/btamadio/RPV_SUSY/MAF/xAODAnaHelpers/data/data15_13TeV.periodAllYear_DetStatus-v75-repro20-01_DQDefects-00-02-02_PHYS_StandardGRL_All_Good_25ns.xml";
    //this data structure holds the GRL information
    map<int,vector<pair<int,int> > >  m_GRL;
@@ -469,25 +469,30 @@ void HistMaker::Init(TTree *tree)
    fChain->SetBranchAddress("jet_pt", &jet_pt, &b_jet_pt);
    fChain->SetBranchAddress("jet_phi", &jet_phi, &b_jet_phi);
    fChain->SetBranchAddress("jet_eta", &jet_eta, &b_jet_eta);
-   fChain->SetBranchAddress("jet_Timing", &jet_Timing, &b_jet_Timing);
-   fChain->SetBranchAddress("jet_LArQuality", &jet_LArQuality, &b_jet_LArQuality);
-   fChain->SetBranchAddress("jet_HECQuality", &jet_HECQuality, &b_jet_HECQuality);
-   fChain->SetBranchAddress("jet_NegativeE", &jet_NegativeE, &b_jet_NegativeE);
-   fChain->SetBranchAddress("jet_AverageLArQF", &jet_AverageLArQF, &b_jet_AverageLArQF);
-   fChain->SetBranchAddress("jet_BchCorrCell", &jet_BchCorrCell, &b_jet_BchCorrCell);
-   fChain->SetBranchAddress("jet_N90Constituents", &jet_N90Constituents, &b_jet_N90Constituents);
-   fChain->SetBranchAddress("jet_LArBadHVEFracnergyFrac", &jet_LArBadHVEFracnergyFrac, &b_jet_LArBadHVEFracnergyFrac);
-   fChain->SetBranchAddress("jet_LArBadHVNCell", &jet_LArBadHVNCell, &b_jet_LArBadHVNCell);
-   fChain->SetBranchAddress("jet_OotFracClusters5", &jet_OotFracClusters5, &b_jet_OotFracClusters5);
-   fChain->SetBranchAddress("jet_OotFracClusters10", &jet_OotFracClusters10, &b_jet_OotFracClusters10);
-   fChain->SetBranchAddress("jet_LeadingClusterPt", &jet_LeadingClusterPt, &b_jet_LeadingClusterPt);
-   fChain->SetBranchAddress("jet_LeadingClusterSecondLambda", &jet_LeadingClusterSecondLambda, &b_jet_LeadingClusterSecondLambda);
-   fChain->SetBranchAddress("jet_LeadingClusterCenterLambda", &jet_LeadingClusterCenterLambda, &b_jet_LeadingClusterCenterLambda);
-   fChain->SetBranchAddress("jet_LeadingClusterSecondR", &jet_LeadingClusterSecondR, &b_jet_LeadingClusterSecondR);
-   fChain->SetBranchAddress("jet_clean_passLooseBad", &jet_clean_passLooseBad, &b_jet_clean_passLooseBad);
-   fChain->SetBranchAddress("jet_clean_passLooseBadUgly", &jet_clean_passLooseBadUgly, &b_jet_clean_passLooseBadUgly);
-   fChain->SetBranchAddress("jet_clean_passTightBad", &jet_clean_passTightBad, &b_jet_clean_passTightBad);
-   fChain->SetBranchAddress("jet_clean_passTightBadUgly", &jet_clean_passTightBadUgly, &b_jet_clean_passTightBadUgly);
+   if(!fChain->GetListOfBranches()->Contains("jet_Timing")){
+     m_isCalibrated = false;
+   }
+   if(m_isCalibrated){
+     fChain->SetBranchAddress("jet_Timing", &jet_Timing, &b_jet_Timing);
+     fChain->SetBranchAddress("jet_LArQuality", &jet_LArQuality, &b_jet_LArQuality);
+     fChain->SetBranchAddress("jet_HECQuality", &jet_HECQuality, &b_jet_HECQuality);
+     fChain->SetBranchAddress("jet_NegativeE", &jet_NegativeE, &b_jet_NegativeE);
+     fChain->SetBranchAddress("jet_AverageLArQF", &jet_AverageLArQF, &b_jet_AverageLArQF);
+     fChain->SetBranchAddress("jet_BchCorrCell", &jet_BchCorrCell, &b_jet_BchCorrCell);
+     fChain->SetBranchAddress("jet_N90Constituents", &jet_N90Constituents, &b_jet_N90Constituents);
+     fChain->SetBranchAddress("jet_LArBadHVEFracnergyFrac", &jet_LArBadHVEFracnergyFrac, &b_jet_LArBadHVEFracnergyFrac);
+     fChain->SetBranchAddress("jet_LArBadHVNCell", &jet_LArBadHVNCell, &b_jet_LArBadHVNCell);
+     fChain->SetBranchAddress("jet_OotFracClusters5", &jet_OotFracClusters5, &b_jet_OotFracClusters5);
+     fChain->SetBranchAddress("jet_OotFracClusters10", &jet_OotFracClusters10, &b_jet_OotFracClusters10);
+     fChain->SetBranchAddress("jet_LeadingClusterPt", &jet_LeadingClusterPt, &b_jet_LeadingClusterPt);
+     fChain->SetBranchAddress("jet_LeadingClusterSecondLambda", &jet_LeadingClusterSecondLambda, &b_jet_LeadingClusterSecondLambda);
+     fChain->SetBranchAddress("jet_LeadingClusterCenterLambda", &jet_LeadingClusterCenterLambda, &b_jet_LeadingClusterCenterLambda);
+     fChain->SetBranchAddress("jet_LeadingClusterSecondR", &jet_LeadingClusterSecondR, &b_jet_LeadingClusterSecondR);
+     fChain->SetBranchAddress("jet_clean_passLooseBad", &jet_clean_passLooseBad, &b_jet_clean_passLooseBad);
+     fChain->SetBranchAddress("jet_clean_passLooseBadUgly", &jet_clean_passLooseBadUgly, &b_jet_clean_passLooseBadUgly);
+     fChain->SetBranchAddress("jet_clean_passTightBad", &jet_clean_passTightBad, &b_jet_clean_passTightBad);
+     fChain->SetBranchAddress("jet_clean_passTightBadUgly", &jet_clean_passTightBadUgly, &b_jet_clean_passTightBadUgly);
+   }
    fChain->SetBranchAddress("jet_HECFrac", &jet_HECFrac, &b_jet_HECFrac);
    fChain->SetBranchAddress("jet_EMFrac", &jet_EMFrac, &b_jet_EMFrac);
    fChain->SetBranchAddress("jet_CentroidR", &jet_CentroidR, &b_jet_CentroidR);
@@ -496,31 +501,33 @@ void HistMaker::Init(TTree *tree)
    fChain->SetBranchAddress("jet_LowEtConstituentsFrac", &jet_LowEtConstituentsFrac, &b_jet_LowEtConstituentsFrac);
    fChain->SetBranchAddress("jet_GhostMuonSegmentCount", &jet_GhostMuonSegmentCount, &b_jet_GhostMuonSegmentCount);
    fChain->SetBranchAddress("jet_Width", &jet_Width, &b_jet_Width);
-   fChain->SetBranchAddress("jet_emScalePt", &jet_emScalePt, &b_jet_emScalePt);
-   fChain->SetBranchAddress("jet_constScalePt", &jet_constScalePt, &b_jet_constScalePt);
-   fChain->SetBranchAddress("jet_pileupScalePt", &jet_pileupScalePt, &b_jet_pileupScalePt);
-   fChain->SetBranchAddress("jet_originConstitScalePt", &jet_originConstitScalePt, &b_jet_originConstitScalePt);
-   fChain->SetBranchAddress("jet_etaJESScalePt", &jet_etaJESScalePt, &b_jet_etaJESScalePt);
-   fChain->SetBranchAddress("jet_gscScalePt", &jet_gscScalePt, &b_jet_gscScalePt);
-   fChain->SetBranchAddress("jet_insituScalePt", &jet_insituScalePt, &b_jet_insituScalePt);
-   fChain->SetBranchAddress("jet_SV0", &jet_SV0, &b_jet_SV0);
-   fChain->SetBranchAddress("jet_SV1", &jet_SV1, &b_jet_SV1);
-   fChain->SetBranchAddress("jet_IP3D", &jet_IP3D, &b_jet_IP3D);
-   fChain->SetBranchAddress("jet_SV1IP3D", &jet_SV1IP3D, &b_jet_SV1IP3D);
-   fChain->SetBranchAddress("jet_MV1", &jet_MV1, &b_jet_MV1);
-   fChain->SetBranchAddress("jet_MV2c00", &jet_MV2c00, &b_jet_MV2c00);
-   fChain->SetBranchAddress("jet_MV2c10", &jet_MV2c10, &b_jet_MV2c10);
-   fChain->SetBranchAddress("jet_MV2c20", &jet_MV2c20, &b_jet_MV2c20);
-   fChain->SetBranchAddress("jet_HadronConeExclTruthLabelID", &jet_HadronConeExclTruthLabelID, &b_jet_HadronConeExclTruthLabelID);
-   fChain->SetBranchAddress("njets_Fix60", &njets_Fix60, &b_njets_Fix60);
-   fChain->SetBranchAddress("jet_isFix60", &jet_isFix60, &b_jet_isFix60);
-   fChain->SetBranchAddress("njets_Fix70", &njets_Fix70, &b_njets_Fix70);
-   fChain->SetBranchAddress("jet_isFix70", &jet_isFix70, &b_jet_isFix70);
-   fChain->SetBranchAddress("njets_Fix77", &njets_Fix77, &b_njets_Fix77);
-   fChain->SetBranchAddress("jet_isFix77", &jet_isFix77, &b_jet_isFix77);
+   if(m_isCalibrated){
+     fChain->SetBranchAddress("jet_emScalePt", &jet_emScalePt, &b_jet_emScalePt);
+     fChain->SetBranchAddress("jet_constScalePt", &jet_constScalePt, &b_jet_constScalePt);
+     fChain->SetBranchAddress("jet_pileupScalePt", &jet_pileupScalePt, &b_jet_pileupScalePt);
+     fChain->SetBranchAddress("jet_originConstitScalePt", &jet_originConstitScalePt, &b_jet_originConstitScalePt);
+     fChain->SetBranchAddress("jet_etaJESScalePt", &jet_etaJESScalePt, &b_jet_etaJESScalePt);
+     fChain->SetBranchAddress("jet_gscScalePt", &jet_gscScalePt, &b_jet_gscScalePt);
+     fChain->SetBranchAddress("jet_insituScalePt", &jet_insituScalePt, &b_jet_insituScalePt);
+     fChain->SetBranchAddress("jet_SV0", &jet_SV0, &b_jet_SV0);
+     fChain->SetBranchAddress("jet_SV1", &jet_SV1, &b_jet_SV1);
+     fChain->SetBranchAddress("jet_IP3D", &jet_IP3D, &b_jet_IP3D);
+     fChain->SetBranchAddress("jet_SV1IP3D", &jet_SV1IP3D, &b_jet_SV1IP3D);
+     fChain->SetBranchAddress("jet_MV1", &jet_MV1, &b_jet_MV1);
+     fChain->SetBranchAddress("jet_MV2c00", &jet_MV2c00, &b_jet_MV2c00);
+     fChain->SetBranchAddress("jet_MV2c10", &jet_MV2c10, &b_jet_MV2c10);
+     fChain->SetBranchAddress("jet_MV2c20", &jet_MV2c20, &b_jet_MV2c20);
+     fChain->SetBranchAddress("jet_HadronConeExclTruthLabelID", &jet_HadronConeExclTruthLabelID, &b_jet_HadronConeExclTruthLabelID);
+     fChain->SetBranchAddress("njets_Fix60", &njets_Fix60, &b_njets_Fix60);
+     fChain->SetBranchAddress("jet_isFix60", &jet_isFix60, &b_jet_isFix60);
+     fChain->SetBranchAddress("njets_Fix70", &njets_Fix70, &b_njets_Fix70);
+     fChain->SetBranchAddress("jet_isFix70", &jet_isFix70, &b_jet_isFix70);
+     fChain->SetBranchAddress("njets_Fix77", &njets_Fix77, &b_njets_Fix77);
+     fChain->SetBranchAddress("jet_isFix77", &jet_isFix77, &b_jet_isFix77);
 
-   fChain->SetBranchAddress("njets_Fix85", &njets_Fix85, &b_njets_Fix85);
-   fChain->SetBranchAddress("jet_isFix85", &jet_isFix85, &b_jet_isFix85);
+     fChain->SetBranchAddress("njets_Fix85", &njets_Fix85, &b_njets_Fix85);
+     fChain->SetBranchAddress("jet_isFix85", &jet_isFix85, &b_jet_isFix85);
+   }
    fChain->SetBranchAddress("nfatjets", &nfatjets, &b_nfatjets);
    fChain->SetBranchAddress("fatjet_E", &fatjet_E, &b_fatjet_E);
    fChain->SetBranchAddress("fatjet_m", &fatjet_m, &b_fatjet_m);
@@ -544,16 +551,16 @@ void HistMaker::Init(TTree *tree)
    
    if(fChain->GetListOfBranches()->Contains("mcChannelNumber")){
      m_isMC = true;
-     fChain->SetBranchAddress("jet_SFFix60", &jet_SFFix60, &b_jet_SFFix60);
-     fChain->SetBranchAddress("jet_SFFix70", &jet_SFFix70, &b_jet_SFFix70);
-     fChain->SetBranchAddress("jet_SFFix77", &jet_SFFix77, &b_jet_SFFix77);
-     fChain->SetBranchAddress("jet_SFFix85", &jet_SFFix85, &b_jet_SFFix85);
-
-     fChain->SetBranchAddress("weight_jet_SFFix60", &weight_jet_SFFix60, &b_weight_jet_SFFix60);
-     fChain->SetBranchAddress("weight_jet_SFFix70", &weight_jet_SFFix70, &b_weight_jet_SFFix70);
-     fChain->SetBranchAddress("weight_jet_SFFix77", &weight_jet_SFFix77, &b_weight_jet_SFFix77);
-     fChain->SetBranchAddress("weight_jet_SFFix85", &weight_jet_SFFix85, &b_weight_jet_SFFix85);
-
+     if(m_isCalibrated){
+       fChain->SetBranchAddress("jet_SFFix60", &jet_SFFix60, &b_jet_SFFix60);
+       fChain->SetBranchAddress("jet_SFFix70", &jet_SFFix70, &b_jet_SFFix70);
+       fChain->SetBranchAddress("jet_SFFix77", &jet_SFFix77, &b_jet_SFFix77);
+       fChain->SetBranchAddress("jet_SFFix85", &jet_SFFix85, &b_jet_SFFix85);
+       fChain->SetBranchAddress("weight_jet_SFFix60", &weight_jet_SFFix60, &b_weight_jet_SFFix60);
+       fChain->SetBranchAddress("weight_jet_SFFix70", &weight_jet_SFFix70, &b_weight_jet_SFFix70);
+       fChain->SetBranchAddress("weight_jet_SFFix77", &weight_jet_SFFix77, &b_weight_jet_SFFix77);
+       fChain->SetBranchAddress("weight_jet_SFFix85", &weight_jet_SFFix85, &b_weight_jet_SFFix85);
+     }
      fChain->SetBranchAddress("mcEventNumber", &mcEventNumber, &b_mcEventNumber);
      fChain->SetBranchAddress("mcChannelNumber", &mcChannelNumber, &b_mcChannelNumber);
      fChain->SetBranchAddress("mcEventWeight", &mcEventWeight, &b_mcEventWeight);

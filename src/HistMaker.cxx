@@ -22,7 +22,12 @@ void HistMaker::Loop(){
    }
    else{
      fChain->GetEntry(0);
-     suffix="_"+to_string(mcChannelNumber);
+     if (mcChannelNumber == 0){
+       suffix="_"+to_string(runNumber);
+     }
+     else{
+       suffix="_"+to_string(mcChannelNumber);
+     }
    }
    Long64_t nentries = fChain->GetEntriesFast();
    TH1F *h_initEvents = new TH1F(("h_initEvents"+suffix).c_str(),"initial nEvents",1,0.5,1.5);
@@ -153,20 +158,38 @@ void HistMaker::Loop(){
    TH1F* h_nFatJet_presel = new TH1F(("h_nFatJet_presel"+suffix).c_str(),"n_{fat jet}",10,0.5,10.5);
    TH1F* h_MJ_presel = new TH1F(("h_MJ_presel"+suffix).c_str(),"MJ",150,0,1500);
 
-   TH1F* h_fatjet_pt = new TH1F(("h_fatjet_pt"+suffix).c_str(),"fat jet pT [GeV]",200,0,2000);
-   TH1F* h_fatjet_m = new TH1F(("h_fatjet_m"+suffix).c_str(),"fat jet mass [GeV]",200,0,2000);
+   TH1F* h_fatjet_pt = new TH1F(("h_fatjet_pt"+suffix).c_str(),"fat jet pT [GeV]",30,0,2000);
+   TH1F* h_fatjet_m = new TH1F(("h_fatjet_m"+suffix).c_str(),"fat jet mass [GeV]",30,0,250);
    TH1F* h_fatjet_eta = new TH1F(("h_fatjet_eta"+suffix).c_str(),"fat jet eta",50,-2.2,2.2);   
-   TH1F* h_fatjet_phi = new TH1F(("h_fatjet_phi"+suffix).c_str(),"fat jet phi",50,-3.5,3.5);
-   TH1F* h_fatjet_nTrimSubjets = new TH1F(("h_fatjet_nTrimSubjets"+suffix).c_str(),"fat jet nTrimSubjets",6,-0.5,6.5);
-   TH1F* h_fatjet_split12 = new TH1F(("h_fatjet_Split12"+suffix).c_str(),"fat jet Split12",80,0,800);
-   TH1F* h_fatjet_split23 = new TH1F(("h_fatjet_Split23"+suffix).c_str(),"fat jet Split23",80,0,800);   
-   TH1F* h_fatjet_split34 = new TH1F(("h_fatjet_Split34"+suffix).c_str(),"fat jet Split34",80,0,800);
-   TH1F* h_fatjet_tau32_wta = new TH1F(("h_fatjet_tau32_wta"+suffix).c_str(),"fat jet tau32 wta",100,0,1);
-   TH1F* h_fatjet_tau21_wta = new TH1F(("h_fatjet_tau21_wta"+suffix).c_str(),"fat jet tau21 wta",100,0,1);
-   TH1F* h_fatjet_D2 = new TH1F(("h_fatjet_D2"+suffix).c_str(),"fat jet D2",20,0,200);
-   TH1F* h_fatjet_C2 = new TH1F(("h_fatjet_C2"+suffix).c_str(),"fat jet C2",20,0,0.6);
+   TH1F* h_fatjet_phi = new TH1F(("h_fatjet_phi"+suffix).c_str(),"fat jet phi",50,-3.25,3.25);
+   TH1F* h_fatjet_nTrimSubjets = new TH1F(("h_fatjet_nTrimSubjets"+suffix).c_str(),"fat jet nTrimSubjets",6,0.5,6.5);
+   TH1F* h_fatjet_split12 = new TH1F(("h_fatjet_Split12"+suffix).c_str(),"fat jet Split12",30,0,120);
+   TH1F* h_fatjet_split23 = new TH1F(("h_fatjet_Split23"+suffix).c_str(),"fat jet Split23",30,0,120);   
+   TH1F* h_fatjet_split34 = new TH1F(("h_fatjet_Split34"+suffix).c_str(),"fat jet Split34",30,0,120);
+   TH1F* h_fatjet_tau32_wta = new TH1F(("h_fatjet_tau32_wta"+suffix).c_str(),"fat jet tau32 wta",30,0,1.2);
+   TH1F* h_fatjet_tau21_wta = new TH1F(("h_fatjet_tau21_wta"+suffix).c_str(),"fat jet tau21 wta",30,0,1.2);
+   TH1F* h_fatjet_D2 = new TH1F(("h_fatjet_D2"+suffix).c_str(),"fat jet D2",30,0,8);
+   TH1F* h_fatjet_C2 = new TH1F(("h_fatjet_C2"+suffix).c_str(),"fat jet C2",30,0,0.6);
    
+   vector<TH1F*> h_fatjet_m_nTrim;
+   vector<TH1F*> h_fatjet_split12_nTrim;
+   vector<TH1F*> h_fatjet_split23_nTrim;
+   vector<TH1F*> h_fatjet_split34_nTrim;
+   vector<TH1F*> h_fatjet_tau32_nTrim;
+   vector<TH1F*> h_fatjet_tau21_nTrim;
+   vector<TH1F*> h_fatjet_D2_nTrim;
+   vector<TH1F*> h_fatjet_C2_nTrim;
 
+   for ( int i = 1; i <= 3; i++){
+     h_fatjet_m_nTrim.push_back( new TH1F (("h_fatjet_m_nTrim_"+to_string(i)+suffix).c_str(),"fat jet mass",30,0,250));
+     h_fatjet_split12_nTrim.push_back( new TH1F (("h_fatjet_split12_nTrim_"+to_string(i)+suffix).c_str(),"fat jet split12",30,0,120));
+     h_fatjet_split23_nTrim.push_back( new TH1F (("h_fatjet_split23_nTrim_"+to_string(i)+suffix).c_str(),"fat jet split23",30,0,120));
+     h_fatjet_split34_nTrim.push_back( new TH1F (("h_fatjet_split34_nTrim_"+to_string(i)+suffix).c_str(),"fat jet split34",30,0,120));
+     h_fatjet_tau32_nTrim.push_back( new TH1F (("h_fatjet_tau32_nTrim_"+to_string(i)+suffix).c_str(),"fat jet tau32",30,0,1.2));
+     h_fatjet_tau21_nTrim.push_back( new TH1F (("h_fatjet_tau21_nTrim_"+to_string(i)+suffix).c_str(),"fat jet tau21",30,0,1.2));
+     h_fatjet_D2_nTrim.push_back( new TH1F (("h_fatjet_D2_nTrim_"+to_string(i)+suffix).c_str(),"fat jet D2",30,0,8));
+     h_fatjet_C2_nTrim.push_back( new TH1F (("h_fatjet_C2_nTrim_"+to_string(i)+suffix).c_str(),"fat jet C2",30,0,0.6));
+   }
 
    if (m_isMC){
      fChain->GetEntry(0);
@@ -196,7 +219,8 @@ void HistMaker::Loop(){
       vector<TLorentzVector> fj4mom;
       if (m_isMC){
 	w = 1E6 * m_lumi * weight / m_denom;
-	bw = w*weight_jet_SFFix70->at(0);
+	if(m_isCalibrated){ bw = w*weight_jet_SFFix70->at(0); }
+	else{ bw = w; }
       }
       //GRL cut
       else{
@@ -214,10 +238,15 @@ void HistMaker::Loop(){
 
       //trigger
       bool passTrig = false;
-      for( auto s : *passedTriggers ){
-	if ( s.find("HLT_j360_a10")!=string::npos || s.find("HLT_j380_a10")!=string::npos || s.find("HLT_j400_a10")!=string::npos || s.find("HLT_j420_a10")!=string::npos ){
-	  passTrig = true;
+      if(m_isCalibrated){
+	for( auto s : *passedTriggers ){
+	  if ( s.find("HLT_j360_a10")!=string::npos || s.find("HLT_j380_a10")!=string::npos || s.find("HLT_j400_a10")!=string::npos || s.find("HLT_j420_a10")!=string::npos ){
+	    passTrig = true;
+	  }
 	}
+      }
+      else{
+	passTrig = true;
       }
       if ( !passTrig ){ continue; }
       h_cutflow->Fill(++iCut,w);
@@ -246,6 +275,16 @@ void HistMaker::Loop(){
 	  h_fatjet_tau21_wta->Fill(fatjet_tau21_wta->at(i),w);
 	  h_fatjet_D2->Fill(fatjet_D2->at(i),w);
 	  h_fatjet_C2->Fill(fatjet_C2->at(i),w);
+	  int nTrimSubjets = fatjet_NTrimSubjets->at(i);
+	  if (nTrimSubjets > 3){ nTrimSubjets = 3; }
+	  h_fatjet_m_nTrim.at(nTrimSubjets-1)->Fill(fatjet_m->at(i),w);
+	  h_fatjet_split12_nTrim.at(nTrimSubjets-1)->Fill(fatjet_Split12->at(i),w);
+	  h_fatjet_split23_nTrim.at(nTrimSubjets-1)->Fill(fatjet_Split23->at(i),w);
+	  h_fatjet_split34_nTrim.at(nTrimSubjets-1)->Fill(fatjet_Split34->at(i),w);
+	  h_fatjet_tau32_nTrim.at(nTrimSubjets-1)->Fill(fatjet_tau32_wta->at(i),w);
+	  h_fatjet_tau21_nTrim.at(nTrimSubjets-1)->Fill(fatjet_tau21_wta->at(i),w);
+	  h_fatjet_D2_nTrim.at(nTrimSubjets-1)->Fill(fatjet_D2->at(i),w);
+	  h_fatjet_C2_nTrim.at(nTrimSubjets-1)->Fill(fatjet_C2->at(i),w);
 	}
       }
       //end of preselection
@@ -253,20 +292,22 @@ void HistMaker::Loop(){
       h_cutflow->Fill(++iCut,w);
       int nTruB = 0;
       //count the b-jets
-      for( int i = 0; i < jet_pt->size(); i++){
-       	if ( jet_pt->at(i) > m_jetPtCut && fabs(jet_eta->at(i)) < m_jetEtaCut && jet_clean_passLooseBad->at(i) == 1){
-	  //histograms of truth b-jets, to get b-tagging efficiency
-	  if(abs(jet_PartonTruthLabelID->at(i)) == 5) { 
-	    nTruB++;
-	    h_bPt->Fill(jet_pt->at(i),w); 
-	    if(jet_isFix70->at(i)){ h_bPt_tagged->Fill(jet_pt->at(i),bw); }
+      if(m_isCalibrated){
+	for( int i = 0; i < jet_pt->size(); i++){
+	  if ( jet_pt->at(i) > m_jetPtCut && fabs(jet_eta->at(i)) < m_jetEtaCut && jet_clean_passLooseBad->at(i) == 1){
+	    //histograms of truth b-jets, to get b-tagging efficiency
+	    if(abs(jet_PartonTruthLabelID->at(i)) == 5) { 
+	      nTruB++;
+	      h_bPt->Fill(jet_pt->at(i),w); 
+	      if(jet_isFix70->at(i)){ h_bPt_tagged->Fill(jet_pt->at(i),bw); }
+	    }
+	    if (jet_isFix70->at(i) == 1){ 
+	      nBTag ++; 
+	    }
 	  }
-       	  if (jet_isFix70->at(i) == 1){ 
-	    nBTag ++; 
-	  }
-       	}
-      }
+	}
       h_nTruB->Fill(nTruB,bw);
+      }
       sort(fj4mom.begin(), fj4mom.end(), reorder);
       if ( fj4mom.size() >= 2 ) { dy = fabs(fj4mom.at(0).Eta() - fj4mom.at(1).Eta()); }
       int nJetLoop = 4;
