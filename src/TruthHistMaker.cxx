@@ -37,6 +37,31 @@ void TruthHistMaker::Loop()
    h_SRyield->GetXaxis()->SetBinLabel(19,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
    h_SRyield->GetXaxis()->SetBinLabel(20,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.8 TeV");
 
+   TH1F* h_SRyield_unweighted = new TH1F(("h_SRyield_unweighted"+suffix).c_str(),"signal region yield",20,0.5,20.5);
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(1,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(2,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(3,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.7 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(4,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.75 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(5,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.8 TeV");
+
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(6,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.6 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(7,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.65 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(8,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(9,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(10,"n_{fatjet} #geq 4, b-inc, M_{J}^{#Sigma} > 0.8 TeV"); 
+
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(11,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(12,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.65 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(13,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.7 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(14,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.75 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(15,"n_{fatjet} #geq 5, b-tag, M_{J}^{#Sigma} > 0.8 TeV");
+
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(16,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.6 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(17,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.65 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(18,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.7 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(19,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.75 TeV");
+   h_SRyield_unweighted->GetXaxis()->SetBinLabel(20,"n_{fatjet} #geq 5, b-inc, M_{J}^{#Sigma} > 0.8 TeV");
+
    Long64_t nentries = fChain->GetEntriesFast();
 
    Long64_t nbytes = 0, nb = 0;
@@ -75,32 +100,32 @@ void TruthHistMaker::Loop()
       int sr=0;
       if (nFatJet >= 4 && dy < 1.4){
         if (nBTag >= 1){
-      	  if (mj > 600){h_SRyield->Fill(sr+1,m_weight); }
-      	  if (mj > 650){h_SRyield->Fill(sr+2,m_weight); }
-      	  if (mj > 700){h_SRyield->Fill(sr+3,m_weight); }
-      	  if (mj > 750){h_SRyield->Fill(sr+4,m_weight); }
-      	  if (mj > 800){h_SRyield->Fill(sr+5,m_weight); }
+      	  if (mj > 600){h_SRyield->Fill(sr+1,m_weight); h_SRyield_unweighted->Fill(sr+1); }
+      	  if (mj > 650){h_SRyield->Fill(sr+2,m_weight); h_SRyield_unweighted->Fill(sr+2);}
+      	  if (mj > 700){h_SRyield->Fill(sr+3,m_weight); h_SRyield_unweighted->Fill(sr+3);}
+      	  if (mj > 750){h_SRyield->Fill(sr+4,m_weight); h_SRyield_unweighted->Fill(sr+4);}
+      	  if (mj > 800){h_SRyield->Fill(sr+5,m_weight); h_SRyield_unweighted->Fill(sr+5);}
       	}
-      	if (mj > 600){ h_SRyield->Fill(sr+6,m_weight); }
-	if (mj > 650){ h_SRyield->Fill(sr+7,m_weight); }
-	if (mj > 700){ h_SRyield->Fill(sr+8,m_weight); }
-	if (mj > 750){ h_SRyield->Fill(sr+9,m_weight); }
-	if (mj > 800){ h_SRyield->Fill(sr+10,m_weight); }
+      	if (mj > 600){ h_SRyield->Fill(sr+6,m_weight); h_SRyield_unweighted->Fill(sr+6);}
+	if (mj > 650){ h_SRyield->Fill(sr+7,m_weight); h_SRyield_unweighted->Fill(sr+7);}
+	if (mj > 700){ h_SRyield->Fill(sr+8,m_weight); h_SRyield_unweighted->Fill(sr+8);}
+	if (mj > 750){ h_SRyield->Fill(sr+9,m_weight); h_SRyield_unweighted->Fill(sr+8);}
+	if (mj > 800){ h_SRyield->Fill(sr+10,m_weight); h_SRyield_unweighted->Fill(sr+10);}
       }
       sr=10;
       if (nFatJet >= 5 && dy < 1.4){
         if (nBTag >= 1){
-      	  if (mj > 600){h_SRyield->Fill(sr+1,m_weight); }
-      	  if (mj > 650){h_SRyield->Fill(sr+2,m_weight); }
-      	  if (mj > 700){h_SRyield->Fill(sr+3,m_weight); }
-      	  if (mj > 750){h_SRyield->Fill(sr+4,m_weight); }
-      	  if (mj > 800){h_SRyield->Fill(sr+5,m_weight); }
+      	  if (mj > 600){h_SRyield->Fill(sr+1,m_weight); h_SRyield_unweighted->Fill(sr+1);}
+      	  if (mj > 650){h_SRyield->Fill(sr+2,m_weight); h_SRyield_unweighted->Fill(sr+2);}
+      	  if (mj > 700){h_SRyield->Fill(sr+3,m_weight); h_SRyield_unweighted->Fill(sr+3);}
+      	  if (mj > 750){h_SRyield->Fill(sr+4,m_weight); h_SRyield_unweighted->Fill(sr+4);}
+      	  if (mj > 800){h_SRyield->Fill(sr+5,m_weight); h_SRyield_unweighted->Fill(sr+5);}
       	}
-      	if (mj > 600){ h_SRyield->Fill(sr+6,m_weight); }
-	if (mj > 650){ h_SRyield->Fill(sr+7,m_weight); }
-	if (mj > 700){ h_SRyield->Fill(sr+8,m_weight); }
-	if (mj > 750){ h_SRyield->Fill(sr+9,m_weight); }
-	if (mj > 800){ h_SRyield->Fill(sr+10,m_weight); }
+      	if (mj > 600){ h_SRyield->Fill(sr+6,m_weight); h_SRyield_unweighted->Fill(sr+6);}
+	if (mj > 650){ h_SRyield->Fill(sr+7,m_weight); h_SRyield_unweighted->Fill(sr+7);}
+	if (mj > 700){ h_SRyield->Fill(sr+8,m_weight); h_SRyield_unweighted->Fill(sr+8);}
+	if (mj > 750){ h_SRyield->Fill(sr+9,m_weight); h_SRyield_unweighted->Fill(sr+9);}
+	if (mj > 800){ h_SRyield->Fill(sr+10,m_weight); h_SRyield_unweighted->Fill(sr+10);}
       }
    }
    m_outFile->cd();

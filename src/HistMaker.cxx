@@ -41,7 +41,7 @@ void HistMaker::Loop(){
    h_cutflow->GetXaxis()->SetBinLabel(3,"GRL");
    h_cutflow->GetXaxis()->SetBinLabel(4,"event cleaning");
    h_cutflow->GetXaxis()->SetBinLabel(5,"trigger");
-   h_cutflow->GetXaxis()->SetBinLabel(6,"p_T^{lead} > 440 GeV");
+   h_cutflow->GetXaxis()->SetBinLabel(6,"preselection");
    h_cutflow->GetXaxis()->SetBinLabel(7,"n_{fatjet} #geq 5");
    h_cutflow->GetXaxis()->SetBinLabel(8,"b-tag");
    h_cutflow->GetXaxis()->SetBinLabel(9,"|#Delta #eta| < 1.4");
@@ -50,7 +50,6 @@ void HistMaker::Loop(){
    TH1F *h_CRyield = new TH1F(("h_CRyield"+suffix).c_str(),"CR yields",2,0.5,2.5);
    h_CRyield->GetXaxis()->SetBinLabel(1,"= 3 jet, b-veto");
    h_CRyield->GetXaxis()->SetBinLabel(2,"= 3 jet, b-tag, |#Delta #eta| > 1.4");
-
 
    TH1F* h_SRyield = new TH1F(("h_SRyield"+suffix).c_str(),"signal region yield",20,0.5,20.5);
    h_SRyield->GetXaxis()->SetBinLabel(1,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
@@ -240,7 +239,10 @@ void HistMaker::Loop(){
       bool passTrig = false;
       if(m_isCalibrated){
 	for( auto s : *passedTriggers ){
-	  if ( s.find("HLT_j360_a10")!=string::npos || s.find("HLT_j380_a10")!=string::npos || s.find("HLT_j400_a10")!=string::npos || s.find("HLT_j420_a10")!=string::npos ){
+	  //old triggers:
+	  if (s == "HLT_ht850_L1J100" || s == "HLT_ht850_L1J75"){
+	    //new triggers:
+	  //if ( s.find("HLT_j360_a10")!=string::npos || s.find("HLT_j380_a10")!=string::npos || s.find("HLT_j400_a10")!=string::npos || s.find("HLT_j420_a10")!=string::npos ){
 	    passTrig = true;
 	  }
 	}
@@ -258,7 +260,7 @@ void HistMaker::Loop(){
 	  this4mom.SetPtEtaPhiM(fatjet_pt->at(i),fatjet_eta->at(i),fatjet_phi->at(i),fatjet_m->at(i));
 	  fj4mom.push_back(this4mom);
 	  nFatJet++;
-	  if( fatjet_pt->at(i) > m_leadJetPtCut ) { passLeadJet = true; }
+	  //if( fatjet_pt->at(i) > m_leadJetPtCut ) { passLeadJet = true; }
 	}
       }
       for( int i = 0; i < fatjet_pt->size(); i++){
@@ -287,14 +289,13 @@ void HistMaker::Loop(){
 	  h_fatjet_C2_nTrim.at(nTrimSubjets-1)->Fill(fatjet_C2->at(i),w);
 	}
       }
-      //end of preselection
-      if ( !passLeadJet ) { continue; }
-      h_cutflow->Fill(++iCut,w);
       int nTruB = 0;
       //count the b-jets
       if(m_isCalibrated){
 	for( int i = 0; i < jet_pt->size(); i++){
 	  if ( jet_pt->at(i) > m_jetPtCut && fabs(jet_eta->at(i)) < m_jetEtaCut && jet_clean_passLooseBad->at(i) == 1){
+	    ht+=jet_pt->at(i);
+	    if( jet_pt->at(i) > m_leadJetPtCut ) { passLeadJet = true; }
 	    //histograms of truth b-jets, to get b-tagging efficiency
 	    if(abs(jet_PartonTruthLabelID->at(i)) == 5) { 
 	      nTruB++;
@@ -308,6 +309,10 @@ void HistMaker::Loop(){
 	}
       h_nTruB->Fill(nTruB,bw);
       }
+      //end of preselection
+      if ( !passLeadJet || ht < m_htcut) { continue; }
+      h_cutflow->Fill(++iCut,w);
+
       sort(fj4mom.begin(), fj4mom.end(), reorder);
       if ( fj4mom.size() >= 2 ) { dy = fabs(fj4mom.at(0).Eta() - fj4mom.at(1).Eta()); }
       int nJetLoop = 4;
