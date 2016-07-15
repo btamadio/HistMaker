@@ -284,10 +284,10 @@ public :
    TFile *m_outFile;
    float m_jetPtCut = 50.0;
    float m_fatJetPtCut = 200.0;
-   float m_jetEtaCut = 2.8;
+   float m_jetEtaCut = 2.5;
    float m_fatJetEtaCut = 2.0;
-   float m_leadJetPtCut = 200.0;
-   float m_htCut = 1000.;
+   float m_leadJetPtCut = 440.0;
+   float m_htCut = 0.;
    float m_fatJetMpTCut = 1.0;
    string m_GRLFileName = "/project/projectdirs/atlas/btamadio/RPV_SUSY/MAF/xAODAnaHelpers/data/data15_13TeV.periodAllYear_DetStatus-v75-repro20-01_DQDefects-00-02-02_PHYS_StandardGRL_All_Good_25ns.xml";
    //this data structure holds the GRL information
