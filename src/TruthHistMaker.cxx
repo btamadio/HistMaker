@@ -11,6 +11,18 @@ void TruthHistMaker::Loop()
    if (fChain == 0) return;
    fChain->GetEntry(0);
    string suffix="_"+to_string(runNumber);
+   vector<TH1F*> h_MJ_4jSR_b1;
+   vector<TH1F*> h_MJ_4jSR;
+   vector<TH1F*> h_MJ_5jSR_b1;
+   vector<TH1F*> h_MJ_5jSR;
+
+   //MJ distributions for the four signal regions, one for each PDF reweighting
+   for ( int i = 0; i < 5; i++){
+     h_MJ_4jSR_b1.push_back(new TH1F(("h_MJ_4jSR_b1_"+to_string(i)+suffix).c_str(),"MJ",150,0,1500));
+     h_MJ_4jSR.push_back(new TH1F(("h_MJ_4jSR"+to_string(i)+suffix).c_str(),"MJ",150,0,1500));
+     h_MJ_5jSR_b1.push_back(new TH1F(("h_MJ_5jSR_b1_"+to_string(i)+suffix).c_str(),"MJ",150,0,1500));
+     h_MJ_5jSR.push_back(new TH1F(("h_MJ_5jSR"+to_string(i)+suffix).c_str(),"MJ",150,0,1500));
+   }
 
    TH1F* h_SRyield = new TH1F(("h_SRyield"+suffix).c_str(),"signal region yield",20,0.5,20.5);
    h_SRyield->GetXaxis()->SetBinLabel(1,"n_{fatjet} #geq 4, b-tag, M_{J}^{#Sigma} > 0.6 TeV");
@@ -66,6 +78,19 @@ void TruthHistMaker::Loop()
 
    Long64_t nbytes = 0, nb = 0;
    cout<<"m_lumi = "<<m_lumi<<"\t m_weight ="<<m_weight<<"\t xsec = "<<0.1*m_weight/m_lumi<<endl;
+   m_avgPDFweight = {0,0,0,0,0};
+   for (Long64_t jentry=0; jentry<nentries;jentry++) {
+     Long64_t ientry = LoadTree(jentry);
+     if (ientry < 0) break;
+     nb = fChain->GetEntry(jentry);   nbytes += nb;
+     for (int i = 0; i < weight_pdf->size(); i++){
+       m_avgPDFweight.at(i)+=weight_pdf->at(i)/nentries;
+     }
+   }
+   cout<<"Average PDF weights "<<endl;
+   for (int i=0; i<m_avgPDFweight.size(); i++){
+     cout<<i<<"\t"<<m_avgPDFweight.at(i)<<endl;
+   }
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
       Long64_t ientry = LoadTree(jentry);
       if (ientry < 0) break;
@@ -99,6 +124,10 @@ void TruthHistMaker::Loop()
       for( int i = 0; i < nJetLoop; i++){ mj += fj4mom.at(i).M(); }
       int sr=0;
       if (nFatJet >= 4 && dy < 1.4){
+	for (int i = 0; i < weight_pdf->size(); i++){
+	  h_MJ_4jSR.at(i)->Fill(mj,m_weight*weight_pdf->at(i)/m_avgPDFweight.at(i));
+	  if (nBTag >= 1){ h_MJ_4jSR_b1.at(i)->Fill(mj,m_weight*weight_pdf->at(i)/m_avgPDFweight.at(i)); }
+	}
         if (nBTag >= 1){
       	  if (mj > 600){h_SRyield->Fill(sr+1,m_weight); h_SRyield_unweighted->Fill(sr+1); }
       	  if (mj > 650){h_SRyield->Fill(sr+2,m_weight); h_SRyield_unweighted->Fill(sr+2);}
@@ -114,6 +143,10 @@ void TruthHistMaker::Loop()
       }
       sr=10;
       if (nFatJet >= 5 && dy < 1.4){
+	for (int i = 0; i < weight_pdf->size(); i++){
+	  h_MJ_5jSR.at(i)->Fill(mj,m_weight*weight_pdf->at(i)/m_avgPDFweight.at(i));
+	  if (nBTag >= 1){ h_MJ_5jSR_b1.at(i)->Fill(mj,m_weight*weight_pdf->at(i)/m_avgPDFweight.at(i)); }
+	}
         if (nBTag >= 1){
       	  if (mj > 600){h_SRyield->Fill(sr+1,m_weight); h_SRyield_unweighted->Fill(sr+1);}
       	  if (mj > 650){h_SRyield->Fill(sr+2,m_weight); h_SRyield_unweighted->Fill(sr+2);}

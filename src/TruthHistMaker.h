@@ -35,6 +35,7 @@ class TruthHistMaker {
   float m_fatJetEtaCut = 2.0;
   float m_leadJetPtCut = 440.0;
   float m_fatJetMpTCut = 1.0;  
+  vector<float> m_avgPDFweight;
  public :
   void SetupOutput();                                                                                                      
   void SetLumi(float lumi){ 
@@ -60,6 +61,7 @@ class TruthHistMaker {
    Int_t           mcChannelNumber;
    Float_t         mcEventWeight;
    Float_t         weight_xs;
+   vector<float>   *weight_pdf;
    Float_t         weight;
    Int_t           njets;
    vector<float>   *jet_E;
@@ -114,6 +116,7 @@ class TruthHistMaker {
    TBranch        *b_mcChannelNumber;   //!
    TBranch        *b_mcEventWeight;   //!
    TBranch        *b_weight_xs;   //!
+   TBranch        *b_weight_pdf; //!
    TBranch        *b_weight;   //!
    TBranch        *b_njets;   //!
    TBranch        *b_jet_E;   //!
@@ -228,7 +231,8 @@ void TruthHistMaker::Init(TTree *tree)
    // (once per file to be processed).
 
    // Set object pointer
-   jet_E = 0;
+  weight_pdf = 0;
+  jet_E = 0;
    jet_m = 0;
    jet_pt = 0;
    jet_phi = 0;
@@ -283,6 +287,7 @@ void TruthHistMaker::Init(TTree *tree)
    fChain->SetBranchAddress("mcChannelNumber", &mcChannelNumber, &b_mcChannelNumber);
    fChain->SetBranchAddress("mcEventWeight", &mcEventWeight, &b_mcEventWeight);
    fChain->SetBranchAddress("weight_xs", &weight_xs, &b_weight_xs);
+   fChain->SetBranchAddress("weight_pdf", &weight_pdf, &b_weight_pdf);   
    fChain->SetBranchAddress("weight", &weight, &b_weight);
    fChain->SetBranchAddress("njets", &njets, &b_njets);
    fChain->SetBranchAddress("jet_E", &jet_E, &b_jet_E);
