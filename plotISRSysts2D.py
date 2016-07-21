@@ -13,7 +13,7 @@ def truthToReco(dsid):
     mG = pointDictTruth[dsid][0]
     mX = pointDictTruth[dsid][1]
     for key in pointDict:
-        if pointDict[key][0] == mG and pointDict[key][1] == mX:
+        if pointDict[key][0] == mG and pointDict[key][1] == mX and mX!=0:
             return key
     return 0
 
