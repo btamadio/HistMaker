@@ -92,7 +92,7 @@ for i in range(len(srNames)):
                 mX = pointDictTruth[int(dsidList[m])][1]
                 if mX == 0:
                     continue
-                for k in range(4):
+                for k in range(5):
                     nomHist=nomFile.Get(histNames[i]+'0_'+str(dsidList[m]))
                     upHist=nomFile.Get(histNames[i]+str(k)+'_'+str(dsidList[m]))
                     if not nomHist:
@@ -110,7 +110,7 @@ for i in range(len(srNames)):
                         upPercent = 100*abs(upInt/nomInt-1)
                     xBin = bTagUpList[-1].GetXaxis().FindBin(mG)
                     yBin = bTagUpList[-1].GetYaxis().FindBin(mX)
-                    if (upPercent > bTagUpList[-1].GetBinContent(xBin,yBin)):
+                    if upPercent > bTagUpList[-1].GetBinContent(xBin,yBin):
                         bTagUpList[-1].SetBinContent(xBin,yBin,upPercent)
                         pdfList[-1].SetBinContent(xBin,yBin,k)
             can[-1].cd()
