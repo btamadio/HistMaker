@@ -22,14 +22,23 @@ def truthToReco(dsid):
         if pointDict[key][0] == mG and pointDict[key][1] == mX and mX == 0:
             return key
     return 0
-
+def getInfo(dsid):
+    if dsid in pointDictTruth:
+        return pointDictTruth[dsid]
+    else:
+        return pointDict[dsid]
 def drawHists(upHist,downHist,i,j,k):
+
+    downHist.SetMarkerSize(1.5)
+    downHist.SetFillColorAlpha(ROOT.kRed-10,1.0)
+    downHist.SetLineColor(ROOT.kRed)
     upHist.Draw('HIST')
+    upHist.Draw('E SAME')
+    downHist.Draw('HIST SAME')
+    downHist.Draw('E SAME')
+    downHist.Draw('SAME AXIS')
     upHist.GetXaxis().SetTitle('m_{#tilde{g}} [TeV]')
-    if k>=-2:
-        upHist.GetYaxis().SetTitle('% uncertainty')
-    elif k==-3:
-        upHist.GetYaxis().SetTitle('selection efficiency (%)')
+    upHist.GetYaxis().SetTitle('% uncertainty')
     upHist.SetFillColor(ROOT.kBlue-10)
     upHist.SetLineColor(ROOT.kBlue)
     if upHist.GetMaximum() < 15:
@@ -37,24 +46,13 @@ def drawHists(upHist,downHist,i,j,k):
         upHist.SetMinimum(0)
         if downHist:
             upHist.SetMinimum(-15)
-    elif upHist.GetMaximum() < 20:
-        upHist.SetMaximum(20)
-        upHist.SetMinimum(0)
-        if downHist:
-            upHist.SetMinimum(-20)
     else:
         mx = upHist.GetMaximum()
-        upHist.SetMaximum(1.1*mx)
+        upHist.SetMaximum(1.4*mx)
         upHist.SetMinimum(0)
         if downHist:
-            upHist.SetMinimum(-1.1*mx)
+            upHist.SetMinimum(-1.4*mx)
                 
-    if downHist:
-        downHist.SetMarkerSize(1.5)
-        downHist.Draw('HIST SAME')
-        downHist.Draw('SAME AXIS')
-        downHist.SetFillColorAlpha(ROOT.kRed-10,1.0)
-        downHist.SetLineColor(ROOT.kRed)
         
     gridLine = ROOT.TLine()
     gridLine.SetLineColor(ROOT.kBlack)
@@ -105,7 +103,7 @@ mjCutNames=['MJ > 600 GeV','MJ > 650 GeV','MJ > 700 GeV','MJ > 750 GeV','MJ > 80
 srLabs = ['m4_b1','m4_b9','m5_b1','m5_b9']
 mjCutLabs = ['MJ_600_13000','MJ_650_13000','MJ_700_13000','MJ_750_13000','MJ_800_13000']
 
-srBin = 1
+srBin = 0
 can = []
 canTot = []
 jmsUpList = []
@@ -113,55 +111,80 @@ jmsDownList = []
 
 for i in range(len(srNames)):
     for j in range(len(mjCutNames)):
+        srBin+=1
         if i==i and j==j:
             nomFile=ROOT.TFile.Open(filePath+'/nominal.root')
             jmsUpList.append(ROOT.TH1D('hTot_'+srLabs[i]+'_'+mjCutLabs[j]+'__1up','JMS up',10,0.850,1.850))
             jmsDownList.append(ROOT.TH1D('hTot_'+srLabs[i]+'_'+mjCutLabs[j]+'__1down','JMS down',10,0.850,1.850))
-            jmsUpList[-1].SetDirectory(0)
-            jmsDownList[-1].SetDirectory(0)
         for k in range(len(systList)):
             if i==i and j==j and k==k:
                 nomFile = ROOT.TFile.Open(filePath+'/nominal.root')
                 upFile = ROOT.TFile.Open(filePath+'/'+systList[k]+'__1up.root')
-                downFile=0
-                if filePath+'/'+systList[k]+'__1down.root' in fileList:
-                    downFile = ROOT.TFile.Open(filePath+'/'+systList[k]+'__1down.root')
+                downFile = ROOT.TFile.Open(filePath+'/'+systList[k]+'__1down.root')
                 can.append(ROOT.TCanvas('c_'+str(len(can)),'c_'+str(len(can)),800,600))
                 can[-1].cd()
-                upHist = ROOT.TH1D('h_'+srLabs[i]+'_'+mjCutLabs[j]+'_'+systList[k]+'__1up','systematics',10,0.850,1.850)
-                downHist = ROOT.TH1D('h_'+srLabs[i]+'_'+mjCutLabs[j]+'_'+systList[k]+'__1down','systematics',10,0.850,1.850)
+                upHist = ROOT.TH1D('h_'+srLabs[i]+'_'+mjCutLabs[j]+'_'+systList[k]+'__1up','systs',10,0.850,1.850)
+                downHist = ROOT.TH1D('h_'+srLabs[i]+'_'+mjCutLabs[j]+'_'+systList[k]+'__1down','systs',10,0.850,1.850)
                 for m in range(len(dsidList)):
+                    mG = getInfo(dsidList[m])[0]
                     nomSRyield = nomFile.Get('h_SRyield_'+str(dsidList[m]))
-                    upSRyield = upFile.Get('h_SRyield_'+str(dsidList[m]))
-                    downSRyield = 0
-                    if downFile:
-                        downSRyield = downFile.Get('h_SRyield_'+str(dsidList[m]))
-                    mG = pointDict[int(dsidList[m])][0]
-                    upPercent = 100*(upSRyield[srBin]-nomSRyield[srBin])/nomSRyield[srBin]
-                    if upPercent == 0:
-                        upPercent=1E-8
+                    nomSRyield_uw=nomFile.Get('h_SRyield_unweighted_'+str(dsidList[m]))
+                    upSRyield = upFile.Get('h_SRyield_'+str(truthToReco(dsidList[m])))
+                    upSRyield_uw = upFile.Get('h_SRyield_unweighted_'+str(truthToReco(dsidList[m])))
+                    downSRyield = downFile.Get('h_SRyield_'+str(truthToReco(dsidList[m])))
+                    downSRyield_uw = downFile.Get('h_SRyield_unweighted_'+str(truthToReco(dsidList[m])))
+
+                    upNp = upSRyield_uw.GetBinContent(srBin)
+                    dwNp = downSRyield_uw.GetBinContent(srBin)
+                    nomNp = nomSRyield_uw.GetBinContent(srBin)
+
+                    upN0 = 50000.
+                    dwN0 = 50000.
+                    nomN0 = 100000.
+
+                    upEps = upNp/upN0
+                    dwEps = dwNp/dwN0
+                    nomEps = nomNp/nomN0
+
+                    upUncert = upEps*(1-upEps)*upN0/(upNp*upNp)+nomEps*(1-nomEps)*nomN0/(nomNp*nomNp)
+                    upUncert *= (2*upNp/nomNp)*(2*upNp/nomNp)
+                    upUncert = 100*math.sqrt(upUncert)
+
+                    dwUncert = dwEps*(1-dwEps)*dwN0/(dwNp*dwNp)+nomEps*(1-nomEps)*nomN0/(nomNp*nomNp)
+                    dwUncert *= (2*dwNp/nomNp)*(2*dwNp/nomNp)
+                    dwUncert = 100*math.sqrt(dwUncert)
+                    
+
+                    upYield = 0
+                    downYield = 0
+                    upPercent=0
+                    downPercent=0
+                    nomYield = nomSRyield.GetBinContent(srBin)
+                    if upSRyield:
+                        upYield = upSRyield.GetBinContent(srBin)
+                        upPercent = 100*(upYield-nomYield)/nomYield
+#                        if systList[k] in jmsSystList:
+#                            jmsUpList[-1].Fill(mG/1000.,upPercent*upPercent)
+                    if downSRyield:
+                        downYield = downSRyield.GetBinContent(srBin)
+                        downPercent = 100*(downYield-nomYield)/nomYield
+#                        if systList[k] in jmsSystList:
+#                            jmsDownList[-1].Fill(mG/1000.,downPercent*downPercent)
+#                    print mG,systList[k],srBin,nomEps,upEps,dwEps,upUncert
                     upHist.Fill(mG/1000.,upPercent)
-                    if downFile:
-                        downPercent=100*(downSRyield[srBin]-nomSRyield[srBin])/nomSRyield[srBin]
-                        if downPercent==0:
-                            downPercent=-1E-8
-                        downHist.Fill(mG/1000.,downPercent)
-                    if systList[k] in jmsSystList:
-                        jmsUpList[-1].Fill(mG/1000.,upPercent*upPercent)
-                        if downFile:
-                            jmsDownList[-1].Fill(mG/1000.,downPercent*downPercent)
-                if downFile:
-                    drawHists(upHist,downHist,i,j,k)
-                else:
-                    drawHists(upHist,0,i,j,k)
-                outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/ISR_Uncertainty/07_21/RPV6/'
+#                    print upHist.FindBin(mG/1000.)
+                    upHist.SetBinError(upHist.FindBin(mG/1000.),upUncert)
+                    downHist.Fill(mG/1000.,downPercent)
+                    downHist.SetBinError(downHist.FindBin(mG/1000.),dwUncert)
+                drawHists(upHist,downHist,i,j,k)
+                outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/ISR_Uncertainty/07_22/RPV6/'
                 outFileName+='uncert_RPV6_'+srLabs[i]+'_'+mjCutLabs[j]+'_'+systList[k]
                 can[-1].Print(outFileName+'.pdf')
                 can[-1].Print(outFileName+'.png')
                 can[-1].Print(outFileName+'.C')
-                subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/ISR_Uncertainty/07_21/RPV6/*',shell=True)
+                subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/ISR_Uncertainty/07_22/RPV6/*',shell=True)
 
-        if i==i and j==j:
+        if i==i and j==10000:
             canTot.append(ROOT.TCanvas('cTot_'+str(srBin),'cTot_'+str(srBin),800,600))
             canTot[-1].cd()
             jmsUpHist = jmsUpList[-1]
@@ -171,12 +194,11 @@ for i in range(len(srNames)):
                 binCup = math.sqrt(binCup)
                 jmsUpHist.SetBinContent(xBin,binCup)
                 binCdown = jmsDownHist.GetBinContent(xBin)
-                binCdown = math.sqrt(binCdown)
+                binCdown = -1*math.sqrt(abs(binCdown))
                 jmsDownHist.SetBinContent(xBin,-1*binCdown)
             drawHists(jmsUpHist,jmsDownHist,i,j,-1)
-            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/ISR_Uncertainty/07_21/RPV6/'
+            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/ISR_Uncertainty/07_22/RPV6/'
             outFileName+='uncert_RPV6_'+srLabs[i]+'_'+mjCutLabs[j]+'_ISRTotal'
-            canTot[-1].Print(outFileName+'.pdf')
-            canTot[-1].Print(outFileName+'.png')
-            canTot[-1].Print(outFileName+'.C')
-        srBin+=1
+            #canTot[-1].Print(outFileName+'.pdf')
+            #canTot[-1].Print(outFileName+'.png')
+            #canTot[-1].Print(outFileName+'.C')

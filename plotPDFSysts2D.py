@@ -26,25 +26,18 @@ def drawHists(upHist,downHist,i,j,k=-1):
     gridLine = ROOT.TLine()
     gridLine.SetLineStyle(2)
     gridLine.SetLineColor(ROOT.kGray)
-    #vertical lines
-    # for xi in range(650,1950,100):
-    #     gridLine.DrawLine(xi,-200,xi,1800)
-    # for yi in range(-50,1850,200):
-    #     gridLine.DrawLine(550,yi,1950,yi)
-    for xLab in range(700,2000,100):
-        t.DrawText(xLab+50,-215,str(xLab/1000.))
-    for yLab in range(50,1700,200):
-        t.DrawText(535,(yLab+50),str(yLab))
-    if downHist:
-        downHist.SetMarkerSize(1.5)
-        downHist.Draw('TEXT SAME')
+
+    for xLab in range(1000,2000,100):
+        t.DrawText(xLab+25,-115,str(xLab/1000.))
+    for yLab in range(50,2000,200):
+        t.DrawText(965,(yLab+50),str(yLab))
 
     ROOT.ATLASLabel(0.2,0.88,'Simulation Internal')
     lat = ROOT.TLatex()
 
     lat.DrawLatexNDC(0.2,0.8,'PDF Uncertainty (%)')
-    lat.DrawLatexNDC(0.2,0.72,srNames[i])
-    lat.DrawLatexNDC(0.2,0.65,mjCutNames[j])
+    lat.DrawLatexNDC(0.175,0.72,srNames[i])
+    lat.DrawLatexNDC(0.175,0.65,mjCutNames[j])
 
 parser = argparse.ArgumentParser(add_help=False, description='Plot Systs')
 parser.add_argument('input')
@@ -81,9 +74,9 @@ for i in range(len(srNames)):
     for j in range(len(mjCutNames)):
         if i==i and j==j:
             nomFile=ROOT.TFile.Open(filePath+'/nominal.root')
-            bTagUpList.append(ROOT.TH2D('hTotUp_'+srLabs[i]+'_'+mjCutLabs[j],'systematics',28,575,1975,43,-175,1975))
-            pdfList.append(ROOT.TH2D('hPDF_'+srLabs[i]+'_'+mjCutLabs[j],'most discrepant PDF',28,575,1975,43,-175,1975))
-            #print bTagUpList[-1].GetXaxis().GetBinCenter(10),bTagUpList[-1].GetYaxis().GetBinCenter(10)
+            bTagUpList.append(ROOT.TH2D('hTotUp_'+srLabs[i]+'_'+mjCutLabs[j],'systematics',20,975,1975,43,-75,2075))
+            pdfList.append(ROOT.TH2D('hPDF_'+srLabs[i]+'_'+mjCutLabs[j],'most discrepant PDF',20,975,1975,43,-75,2075))
+
             can.append(ROOT.TCanvas('c_'+str(len(can)),'c_'+str(len(can)),800,600))
             canPDF.append(ROOT.TCanvas('cPDF_'+str(len(can)),'cPDF_'+str(len(can)),800,600))
 
@@ -117,9 +110,9 @@ for i in range(len(srNames)):
             drawHists(bTagUpList[-1],0,i,j)
             canPDF[-1].cd()
             drawHists(pdfList[-1],0,i,j)
-            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/PDF_Reweighting/07_18/RPV10/'
+            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/PDF_Reweighting/07_25/RPV10/'
             outFileName+='uncert_RPV10_'+srLabs[i]+'_'+mjCutLabs[j]+'_PDF'
             can[-1].Print(outFileName+'.pdf')
             can[-1].Print(outFileName+'.png')
             can[-1].Print(outFileName+'.C')
-            subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/PDF_Reweighting/07_18/RPV10/*',shell=True)
+            subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/PDF_Reweighting/07_25/RPV10/*',shell=True)
