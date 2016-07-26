@@ -77,7 +77,7 @@ void TruthHistMaker::Loop()
    Long64_t nentries = fChain->GetEntriesFast();
 
    Long64_t nbytes = 0, nb = 0;
-   cout<<"m_lumi = "<<m_lumi<<"\t m_weight ="<<m_weight<<"\t xsec = "<<0.1*m_weight/m_lumi<<endl;
+   //   cout<<"m_lumi = "<<m_lumi<<"\t m_weight ="<<m_weight<<"\t xsec = "<<0.1*m_weight/m_lumi<<endl;
    m_avgPDFweight = {0,0,0,0,0};
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
      Long64_t ientry = LoadTree(jentry);
@@ -87,10 +87,10 @@ void TruthHistMaker::Loop()
        m_avgPDFweight.at(i)+=weight_pdf->at(i)/nentries;
      }
    }
-   cout<<"Average PDF weights "<<endl;
-   for (int i=0; i<m_avgPDFweight.size(); i++){
-     cout<<i<<"\t"<<m_avgPDFweight.at(i)<<endl;
-   }
+   //   cout<<"Average PDF weights "<<endl;
+   //   for (int i=0; i<m_avgPDFweight.size(); i++){
+   //     cout<<i<<"\t"<<m_avgPDFweight.at(i)<<endl;
+   //   }
    for (Long64_t jentry=0; jentry<nentries;jentry++) {
       Long64_t ientry = LoadTree(jentry);
       if (ientry < 0) break;
@@ -138,7 +138,7 @@ void TruthHistMaker::Loop()
       	if (mj > 600){ h_SRyield->Fill(sr+6,m_weight); h_SRyield_unweighted->Fill(sr+6);}
 	if (mj > 650){ h_SRyield->Fill(sr+7,m_weight); h_SRyield_unweighted->Fill(sr+7);}
 	if (mj > 700){ h_SRyield->Fill(sr+8,m_weight); h_SRyield_unweighted->Fill(sr+8);}
-	if (mj > 750){ h_SRyield->Fill(sr+9,m_weight); h_SRyield_unweighted->Fill(sr+8);}
+	if (mj > 750){ h_SRyield->Fill(sr+9,m_weight); h_SRyield_unweighted->Fill(sr+9);}
 	if (mj > 800){ h_SRyield->Fill(sr+10,m_weight); h_SRyield_unweighted->Fill(sr+10);}
       }
       sr=10;

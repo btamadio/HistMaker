@@ -20,6 +20,8 @@ int main(int argc, char *argv[]){
   TTree *t = (TTree*)f->Get(("outTree/"+treeName).c_str());
   TruthHistMaker h(t,outFileName,xsec);
   h.SetLumi(5.8);
+  h.SetInitEvents( t->GetEntries() );
+  cout<<"infile: "<<inFileName<<"\t Initial events: "<<t->GetEntries()<<endl;
   h.SetupOutput();
   h.Loop();
   return 0;
