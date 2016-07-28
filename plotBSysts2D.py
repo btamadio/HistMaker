@@ -49,7 +49,6 @@ parser = argparse.ArgumentParser(add_help=False, description='Plot Systs')
 parser.add_argument('input')
 args = parser.parse_args()
 filePath = args.input.strip('/')
-fileList = glob.glob(filePath + '/*.root')
 nomFile = ROOT.TFile.Open(filePath+'/nominal.root')
 
 dsidList=[]
@@ -60,7 +59,7 @@ for key in nomFile.GetListOfKeys():
 dsidList.sort()
 
 lumiLatex=ROOT.TLatex()
-lumiString = '#int L dt = 5.8 fb^{-1}'
+lumiString = '#int L dt = 14.8 fb^{-1}'
 
 #for use in tlatex
 srNames = ['4jSRb1','5jSRb1']
@@ -115,9 +114,9 @@ for i in range(len(srNames)):
                     bTagUpList[-1].SetBinContent(xBin,yBin,100*binCup)
                     bTagDownList[-1].SetBinContent(xBin,yBin,-100*binCdown)
             drawHists(bTagUpList[-1],bTagDownList[-1],i,j,k)
-            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV10/'
+            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_27/RPV10/'
             outFileName+='uncert_RPV10_'+srLabs[i]+'_'+mjCutLabs[j]+'_BTagging'
             can[-1].Print(outFileName+'.pdf')
             can[-1].Print(outFileName+'.png')
             can[-1].Print(outFileName+'.C')
-            subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV10/*',shell=True)
+            subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_27/RPV10/*',shell=True)

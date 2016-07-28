@@ -33,7 +33,7 @@ void HistMaker::Loop(){
    TH1F *h_initEvents = new TH1F(("h_initEvents"+suffix).c_str(),"initial nEvents",1,0.5,1.5);
    h_initEvents->Fill(1,m_denom);
    
-   TH1F *h_cutflow = new TH1F(("h_cutflow"+suffix).c_str(),"cutflow histogram",10,0.5,10.5);
+   TH1F *h_cutflow = new TH1F(("h_cutflow"+suffix).c_str(),"cutflow histogram",14,0.5,14.5);
    //For data: 2= every event looped over, 3= events that pass GRL
    //For MC: 1 = 2 = xsec*luminosity, 3= all events looped over
    h_cutflow->GetXaxis()->SetBinLabel(1,"CBC Selected");
@@ -42,10 +42,14 @@ void HistMaker::Loop(){
    h_cutflow->GetXaxis()->SetBinLabel(4,"event cleaning");
    h_cutflow->GetXaxis()->SetBinLabel(5,"trigger");
    h_cutflow->GetXaxis()->SetBinLabel(6,"p_{T}^{lead} > 440 GeV");
-   h_cutflow->GetXaxis()->SetBinLabel(7,"n_{fatjet} #geq 5");
-   h_cutflow->GetXaxis()->SetBinLabel(8,"b-tag");
-   h_cutflow->GetXaxis()->SetBinLabel(9,"|#Delta #eta| < 1.4");
-   h_cutflow->GetXaxis()->SetBinLabel(10,"MJ > 800 GeV");
+   h_cutflow->GetXaxis()->SetBinLabel(7,"n_{fatjet} #geq 4");
+   h_cutflow->GetXaxis()->SetBinLabel(8,"n_{fatjet} #geq 4 & M_{J}^{#Sigma} > 800 GeV");
+   h_cutflow->GetXaxis()->SetBinLabel(9,"n_{fatjet} #geq 4 & M_{J}^{#Sigma} > 800 GeV & |#Delta #eta| < 1.4");
+   h_cutflow->GetXaxis()->SetBinLabel(10,"4jSRb1");
+   h_cutflow->GetXaxis()->SetBinLabel(11,"n_{fatjet} #geq 5");
+   h_cutflow->GetXaxis()->SetBinLabel(12,"n_{fatjet} #geq 5 & M_{J}^{#Sigma} > 600 GeV");
+   h_cutflow->GetXaxis()->SetBinLabel(13,"n_{fatjet} #geq 5 & M_{J}^{#Sigma} > 600 GeV & |#Delta #eta| < 1.4");
+   h_cutflow->GetXaxis()->SetBinLabel(14,"5jSRb1");
 
    TH1F *h_CRyield = new TH1F(("h_CRyield"+suffix).c_str(),"CR yields",2,0.5,2.5);
    h_CRyield->GetXaxis()->SetBinLabel(1,"= 3 jet, b-veto");
@@ -312,19 +316,36 @@ void HistMaker::Loop(){
       int nJetLoop = 4;
       if (fj4mom.size() < 4){ nJetLoop = fj4mom.size(); }
       for( int i = 0; i < nJetLoop; i++){ mj += fj4mom.at(i).M(); }
+      
+      iCut++;
+      if(nFatJet >=4 ){	h_cutflow->Fill(iCut,w); }
+      iCut++;
+      if(nFatJet >=4 && mj > 800){ h_cutflow->Fill(iCut,w); }
+      iCut++;
+      if(nFatJet >=4 && mj > 800 && dy < 1.4){ h_cutflow->Fill(iCut,w); }
+      iCut++;
+      if(nFatJet >=4 && mj > 800 && dy < 1.4 && nBTag >=1 ){ h_cutflow->Fill(iCut,bw); }
+      iCut++;
+      if(nFatJet >=5 ){	h_cutflow->Fill(iCut,w); }
+      iCut++;
+      if(nFatJet >=5 && mj > 600){ h_cutflow->Fill(iCut,w); }
+      iCut++;
+      if(nFatJet >=5 && mj > 600 && dy < 1.4){ h_cutflow->Fill(iCut,w); }
+      iCut++;
+      if(nFatJet >=5 && mj > 600 && dy < 1.4 && nBTag >=1 ){ h_cutflow->Fill(iCut,bw); }
 
-      if(nFatJet >= 5){ 
-	h_cutflow->Fill(++iCut,w); 
-	if(nBTag >= 1){
-	  h_cutflow->Fill(++iCut,bw);
-	  if(dy < 1.4){
-	    h_cutflow->Fill(++iCut,bw);
-	    if(mj > 800){
-	      h_cutflow->Fill(++iCut,bw);
-	    }
-	  }
-	}
-      }
+      // if(nFatJet >= 4){ 
+      // 	h_cutflow->Fill(++iCut,w); 
+      // 	if(nBTag >= 1){
+      // 	  h_cutflow->Fill(++iCut,bw);
+      // 	  if(dy < 1.4){
+      // 	    h_cutflow->Fill(++iCut,bw);
+      // 	    if(mj > 800){
+      // 	      h_cutflow->Fill(++iCut,bw);
+      // 	    }
+      // 	  }
+      // 	}
+      // }
       //fill CR yieds (2 CRs)
       if(nFatJet==3){
 	if( nBTag == 0 ){

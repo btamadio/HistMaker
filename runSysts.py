@@ -19,23 +19,22 @@ treeNameList = ['nominal',
                 'JET_GroupedNP_2__1down',
                 'JET_GroupedNP_3__1up',
                 'JET_GroupedNP_3__1down',
-                'JET_JER_SINGLE_NP__1up',
-                'JMR_Smear__1up']
+                'JET_JER_SINGLE_NP__1up']
 
-fileList =  '/global/homes/s/sambt/workarea/RPV_2/files/RPV6_JMR_files.txt'
+fileList = '/global/project/projectdirs/atlas/btamadio/RPV_SUSY/NTUP/fileList.RPV10.AFII.2016_07_13_v2.txt'
 for treeName in treeNameList:
     cmdList = ['./runHists.py',fileList,treeName]
     p=subprocess.call(cmdList)
 for treeName in treeNameList:
-    p=subprocess.call('mkdir -p hists/RPV6',shell=True)
-    p=subprocess.call('hadd hists/RPV6/'+treeName+'.root output/'+treeName+'/*.root',shell=True)
+    p=subprocess.call('mkdir -p hists/RPV10_07_13_14p8fb',shell=True)
+    p=subprocess.call('hadd hists/RPV10_07_13_14p8fb/'+treeName+'.root output/'+treeName+'/*.root',shell=True)
 p = subprocess.call('rm -r output/*',shell=True)
 
-fileList = '/global/homes/s/sambt/workarea/RPV_2/files/RPV10_JMR_files.txt'
+fileList = '/global/project/projectdirs/atlas/btamadio/RPV_SUSY/NTUP/fileList.RPV6.AFII.2016_07_13_v2.txt'
 for treeName in treeNameList:
     cmdList = ['./runHists.py',fileList,treeName]
     p=subprocess.call(cmdList)
 for treeName in treeNameList:
-    p=subprocess.call('mkdir -p hists/RPV10',shell=True)
-    p=subprocess.call('hadd hists/RPV10/'+treeName+'.root output/'+treeName+'/*.root',shell=True)
+    p=subprocess.call('mkdir -p hists/RPV6_07_13_14p8fb',shell=True)
+    p=subprocess.call('hadd hists/RPV6_07_13_14p8fb/'+treeName+'.root output/'+treeName+'/*.root',shell=True)
 p = subprocess.call('rm -r output/*',shell=True)

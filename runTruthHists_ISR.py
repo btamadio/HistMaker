@@ -7,8 +7,8 @@ parser = argparse.ArgumentParser(add_help=False, description='run histos')
 parser.add_argument('input')
 args = parser.parse_args()
 nFiles=15
-#varList = ['scup','scdw','fup','fdw','asup','asdw','pdup','pddw','truthGrid100']
-varList = ['asup']
+varList = ['scup','scdw','asup','asdw','truthGrid100']
+#varList = ['asup']
 for var in varList:
     pattern = args.input.strip('/')+'/'+var+'/*/data-tree/RPV_'+var+'_TRUTH3.root'
     fileList = glob.glob(pattern)

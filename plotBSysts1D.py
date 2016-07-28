@@ -55,7 +55,7 @@ for key in nomFile.GetListOfKeys():
 dsidList.sort()
 
 lumiLatex=ROOT.TLatex()
-lumiString = '#int L dt = 5.8 fb^{-1}'
+lumiString = '#int L dt = 14.8 fb^{-1}'
 
 #for use in tlatex
 srNames = ['4jSRb1','5jSRb1']
@@ -108,9 +108,9 @@ for i in range(len(srNames)):
                 bTagUpList[-1].SetBinContent(xBin,100*binCup)
                 bTagDownList[-1].SetBinContent(xBin,-100*binCdown)
             drawHists(bTagUpList[-1],bTagDownList[-1],i,j,k)
-            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV6/'
+            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_27/RPV6/'
             outFileName+='uncert_RPV6_'+srLabs[i]+'_'+mjCutLabs[j]+'_BTagging'
             can[-1].Print(outFileName+'.pdf')
             can[-1].Print(outFileName+'.png')
             can[-1].Print(outFileName+'.C')
-            subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV6/*',shell=True)
+            subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_27/RPV6/*',shell=True)

@@ -106,7 +106,7 @@ for key in nomFile.GetListOfKeys():
 dsidList.sort()
 
 lumiLatex=ROOT.TLatex()
-lumiString = '#int L dt = 5.8 fb^{-1}'
+lumiString = '#int L dt = 14.8 fb^{-1}'
 
 #for use in tlatex
 srNames = ['4jSRb1','4jSR','5jSRb1','5jSR']
@@ -147,7 +147,7 @@ for i in range(len(srNames)):
                 effHist.Fill(mG/1000.,100*eff)
             canMCStats[-1].cd()
             drawHists(mcStatsHist,0,i,j,-2)
-            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV6/'
+            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_27/RPV6/'
             outFileName+='uncert_RPV6_'+srLabs[i]+'_'+mjCutLabs[j]+'_MC_statistical'
             canMCStats[-1].Print(outFileName+'.pdf')
             canMCStats[-1].Print(outFileName+'.png')
@@ -155,12 +155,12 @@ for i in range(len(srNames)):
 
             canEff[-1].cd()
             drawHists(effHist,0,i,j,-3)
-            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV6/'
+            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_27/RPV6/'
             outFileName+='selection_efficiency_RPV6_'+srLabs[i]+'_'+mjCutLabs[j]
             canEff[-1].Print(outFileName+'.pdf')
             canEff[-1].Print(outFileName+'.png')
             canEff[-1].Print(outFileName+'.C')
-            subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV6/*',shell=True)
+            subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_27/RPV6/*',shell=True)
         if i==i and j==j:
             jmsUpList.append(ROOT.TH1D('hTot_'+srLabs[i]+'_'+mjCutLabs[j]+'__1up','JMS up',10,0.850,1.850))
             jmsDownList.append(ROOT.TH1D('hTot_'+srLabs[i]+'_'+mjCutLabs[j]+'__1down','JMS down',10,0.850,1.850))
@@ -201,12 +201,12 @@ for i in range(len(srNames)):
                     drawHists(upHist,downHist,i,j,k)
                 else:
                     drawHists(upHist,0,i,j,k)
-                outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV6/'
+                outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_27/RPV6/'
                 outFileName+='uncert_RPV6_'+srLabs[i]+'_'+mjCutLabs[j]+'_'+systList[k]
                 can[-1].Print(outFileName+'.pdf')
                 can[-1].Print(outFileName+'.png')
                 can[-1].Print(outFileName+'.C')
-                subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV6/*',shell=True)
+                subprocess.call('chmod a+r /global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_27/RPV6/*',shell=True)
 
         if i==i and j==j:
             canTot.append(ROOT.TCanvas('cTot_'+str(srBin),'cTot_'+str(srBin),800,600))
@@ -221,7 +221,7 @@ for i in range(len(srNames)):
                 binCdown = math.sqrt(binCdown)
                 jmsDownHist.SetBinContent(xBin,-1*binCdown)
             drawHists(jmsUpHist,jmsDownHist,i,j,-1)
-            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_02/RPV6/'
+            outFileName='/global/project/projectdirs/atlas/www/multijet/RPV/btamadio/SignalSysts/07_27/RPV6/'
             outFileName+='uncert_RPV6_'+srLabs[i]+'_'+mjCutLabs[j]+'_JMSTotal'
             canTot[-1].Print(outFileName+'.pdf')
             canTot[-1].Print(outFileName+'.png')
