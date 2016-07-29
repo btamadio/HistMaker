@@ -7,8 +7,9 @@ parser = argparse.ArgumentParser(add_help=False, description='run histos')
 parser.add_argument('input')
 args = parser.parse_args()
 nFiles=15
-varList = ['scup','scdw','asup','asdw','truthGrid100']
+#varList = ['scup','scdw','asup','asdw','truthGrid100']
 #varList = ['asup']
+varList = ['NJET2']
 for var in varList:
     pattern = args.input.strip('/')+'/'+var+'/*/data-tree/RPV_'+var+'_TRUTH3.root'
     fileList = glob.glob(pattern)
@@ -21,6 +22,9 @@ for var in varList:
                 xsec=pointDict[dsid][2]
             elif dsid in pointDictTruth:
                 xsec=pointDictTruth[dsid][2]
+                mG = pointDictTruth[dsid][0]
+                mX = pointDictTruth[dsid][1]
+                print mG,mX,xsec
             else:
                 print 'DSID %i not found' % dsid
                 sys.exit(1)
